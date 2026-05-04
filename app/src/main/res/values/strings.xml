@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Tenretni</string>
+    <string name="error_message">error</string>
 </resources>
