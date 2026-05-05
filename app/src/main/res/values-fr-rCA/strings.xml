@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">Tenretni</string>
     <string name="error_message">erreur</string>
+    <string name="open">Open</string>
 </resources>
