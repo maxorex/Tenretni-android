@@ -3,4 +3,6 @@
     <string name="app_name">Tenretni</string>
     <string name="error_message">erreur</string>
     <string name="open">Open</string>
+    <string name="loading">"Loading "</string>
+    <string name="_10">/10 ...</string>
 </resources>

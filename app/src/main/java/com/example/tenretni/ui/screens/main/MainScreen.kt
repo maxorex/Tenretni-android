@@ -8,6 +8,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,16 +22,13 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import ca.qc.cstj.tenretni.core.extensions.ObserveAsEvents
 import ca.qc.cstj.tenretni.core.ui.navigation.Screen
-
+import com.example.tenretni.ui.navigation.GateWays
 import com.example.tenretni.ui.navigation.MainNavigationBar
 import com.example.tenretni.ui.navigation.MainTopBar
 import com.example.tenretni.ui.navigation.Network
 import com.example.tenretni.ui.navigation.Tickets
-import com.example.tenretni.ui.navigation.GateWays
 import com.example.tenretni.ui.screens.main.ticketsList.TicketsScreen
-import androidx.compose.material3.Text
 import kotlinx.coroutines.launch
-import kotlin.collections.removeLast
 
 
 @Composable

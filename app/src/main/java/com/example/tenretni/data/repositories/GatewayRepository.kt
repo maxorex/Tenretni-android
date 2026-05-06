@@ -1,0 +1,22 @@
+package com.example.tenretni.data.repositories
+
+import com.example.tenretni.data.datasources.GatewayDataSource
+import com.example.tenretni.models.Gateway
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+
+class GatewayRepository(
+    private val gatewayDataSource: GatewayDataSource = GatewayDataSource()
+) {
+
+    fun retrieveAll(): Flow<List<Gateway>> {
+        return flow {
+            emit(gatewayDataSource.retrieveAll())
+        }.catch { ex ->
+            throw ex
+        }.flowOn(Dispatchers.IO)
+    }
+}

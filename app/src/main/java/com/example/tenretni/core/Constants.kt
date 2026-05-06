@@ -12,6 +12,8 @@ object Constants {
         const val TICKETS = "$BASE_API/tickets"
         const val GATEWAYS = "$BASE_API/gateways"
         const val NETWORK = "$BASE_API/network"
+        const val CUSTOMER = "$BASE_API/customers"
+
     }
 
     object RefreshDelay {
