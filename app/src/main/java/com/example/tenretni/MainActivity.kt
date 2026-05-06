@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.tenretni.ui.coordinators.TopLevelCoordinator
-import com.example.tenretni.ui.screens.main.MainScreen
 import com.example.tenretni.ui.theme.TenretniTheme
 
 class MainActivity : ComponentActivity() {
