@@ -81,7 +81,7 @@ private fun LandscapeMode(
                     text = stringResource(R.string.loading) + uiState.progression.toString() + stringResource(
                         R.string._10
                     ) + "\nFernando Garcia, \nMathias Godbout Ouellette,\nCharles Boudreault," + stringResource(
-                        R.string.teretni
+                        R.string.tenretni
                     ) + " - 2026"
                 )
 
@@ -131,7 +131,7 @@ private fun PortraitMode(
                 text = stringResource(R.string.loading) + uiState.progression.toString() + stringResource(
                     R.string._10
                 ) + "\nFernando Garcia, \nMathias Godbout Ouellette,\nCharles Boudreault," + stringResource(
-                    R.string.teretni
+                    R.string.tenretni
                 ) + " - 2026"
             )
 
