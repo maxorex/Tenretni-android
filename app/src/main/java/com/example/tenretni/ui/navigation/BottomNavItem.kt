@@ -11,19 +11,19 @@ data object Tickets: BottomNavItem, Screen {
     override val icon: ImageVector
         @Composable get() = ImageVector.vectorResource(R.drawable.tickets)
     override val title: String
-        @Composable get() = "tickets"
+        @Composable get() = "Tickets"
 }
 
 data object GateWays : BottomNavItem, Screen {
     override val icon: ImageVector
         @Composable get() = ImageVector.vectorResource(R.drawable.gateway)
     override val title: String
-        @Composable get() = "gate ways"
+        @Composable get() = "Gateways"
 }
 
 data object Network : BottomNavItem, Screen {
     override val icon: ImageVector
         @Composable get() = ImageVector.vectorResource(R.drawable.network)
     override val title: String
-        @Composable get() = "network"
+        @Composable get() = "Network"
 }
