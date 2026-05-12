@@ -34,10 +34,22 @@ fun NetworkScreen(
                 text = "Last update: 2026-04-25 01:35:00"
             )
             Text(
-                text = "Node"
+                text = "Eplil\n" +
+                        "2.2.2.2\n" +
+                        "\n" +
+                        "Offline"
             )
             Text(
-                text = "Selected node"
+                text = "Lukryx\n" +
+                        "Online\n" +
+                        "\n" +
+                        "3.3.3.3\n" +
+                        "\n" +
+                        "= 6 ns\n" +
+                        "\n" +
+                        "115.708 Ebps\n" +
+                        "90.509 Ebps\n" +
+                        "-20 dBm"
             )
         }
 
