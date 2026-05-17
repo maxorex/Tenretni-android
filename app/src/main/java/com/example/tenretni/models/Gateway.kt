@@ -20,10 +20,10 @@ data class Gateway(
 
 @Serializable
 data class Config(
-    val kernel: List<String>,
-    val mac: String,
-    val SSID: String,
-    val version: String,
-    val kernelRevision: Float,
-    val installDate: String,
+    val kernel: List<String> = emptyList(),
+    val mac: String = "",
+    val SSID: String = "",
+    val version: String = "",
+    val kernelRevision: Float = 0f,
+    val installDate: String = "",
 )

@@ -37,7 +37,9 @@ fun TopLevelCoordinator(
                 MainScreen()
             }
             entry<Route.ToTicketsScreen> {
-                TicketsScreen()
+                TicketsScreen(
+                    toTicketDetailScreen = { }
+                )
             }
             entry<Route.ToTitleScreen> {
                 TitleScreen(
