@@ -12,7 +12,7 @@ class NetworkDataSource {
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    fun retrieveAll(): List<Network> {
+    fun retrieveAll(): Network {
         val (_, _, result) = Constants.BaseURL.NETWORK.httpGet().responseJson()
 
         return when (result) {
