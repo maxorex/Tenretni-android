@@ -1,3 +1,7 @@
 package com.example.tenretni.ui.screens.main.network
 
-//data class NetworkUiState()
+import com.example.tenretni.models.Node
+
+data class NetworkUiState(
+    val nodes: List<Node> = listOf()
+)
