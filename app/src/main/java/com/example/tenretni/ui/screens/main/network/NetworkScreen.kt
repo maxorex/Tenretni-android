@@ -66,6 +66,7 @@ fun NetworkScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        // TODO: rendre mieu je crois
         // Node List (Horizontal)
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
@@ -73,7 +74,7 @@ fun NetworkScreen(
             contentPadding = PaddingValues(horizontal = 4.dp)
         ) {
 
-            items(uiState.nodes) { node ->
+            items(uiState.network?.nodes ?: emptyList()) { node ->
 
                 NodeListItem(
                     name = node.name,
