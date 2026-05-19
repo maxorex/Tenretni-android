@@ -27,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tenretni.R
 
+// TODO: Les données sur l’état global du réseau doivent être mises à jour automatique à chaque 2 minutes
 // TODO: Changer pour ajouter la bd
 @Composable
 fun NetworkScreen(
@@ -51,15 +52,15 @@ fun NetworkScreen(
                 .padding(bottom = 16.dp)
         )
 
-        // TODO: Changer pour vrai valeur
+        // TODO: vérifier pour bon format
         // Reboot and Update Info
         Text(
-            text = "Next reboot at: 2026-04-25 01:40:00",
+            text = "Next reboot at: ${uiState.network?.nextReboot ?: "Loading..."}",
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "Last update: 2026-04-25 01:35:00",
+            text = "Last update: ${uiState.network?.updateDate ?: "Loading..."}",
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )
