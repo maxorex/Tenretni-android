@@ -14,7 +14,7 @@ class NetworkRepository(
     private val networkDataSource: NetworkDataSource = NetworkDataSource()
 ) {
 
-    fun retrieveAll(): Flow<List<Network>> {
+    fun getNetwork(): Flow<Network> {
         return flow {
             emit(networkDataSource.retrieveAll())
         }.catch { ex ->

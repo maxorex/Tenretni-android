@@ -8,7 +8,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import ca.qc.cstj.tenretni.core.ui.navigation.TopBarOptions
+import com.example.tenretni.core.ui.navigation.TopBarOptions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

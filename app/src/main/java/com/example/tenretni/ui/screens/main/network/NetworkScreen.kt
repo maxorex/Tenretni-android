@@ -3,6 +3,7 @@ package com.example.tenretni.ui.screens.main.network
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.filled.SignalCellularAlt
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,11 +23,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tenretni.R
+import com.example.tenretni.ui.components.NodeCard
 
+// TODO: Les données sur l’état global du réseau doivent être mises à jour automatique à chaque 2 minutes
 // TODO: Changer pour ajouter la bd
 @Composable
-fun NetworkScreen() {
+fun NetworkScreen(
+    viewModel: NetworkViewModel = viewModel()
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -33,6 +41,9 @@ fun NetworkScreen() {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+        // TODO: Rendre plus grand
         // Logo
         Image(
             painter = painterResource(id = R.drawable.tenretni),
@@ -42,36 +53,39 @@ fun NetworkScreen() {
                 .padding(bottom = 16.dp)
         )
 
+        // TODO: vérifier pour bon format
         // Reboot and Update Info
         Text(
-            text = "Next reboot at: 2026-04-25 01:40:00",
+            text = "Next reboot at: ${uiState.network?.nextReboot ?: "Loading..."}",
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "Last update: 2026-04-25 01:35:00",
+            text = "Last update: ${uiState.network?.updateDate ?: "Loading..."}",
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        // TODO: rendre mieu je crois
         // Node List (Horizontal)
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(horizontal = 4.dp)
         ) {
-            item {
-                NodeListItem(name = "Eplil", ip = "2.2.2.2", isOnline = false, isSelected = false)
-            }
-            item {
-                NodeListItem(name = "Lukryx", ip = "3.3.3.3", isOnline = true, isSelected = true)
+
+            items(uiState.network?.nodes ?: emptyList()) { node ->
+
+                NodeCard(node)
             }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        // TODO: Utiliser la node sélectionner
+        // TODO: Faire NodeDetailsCard
         // Selected Node Details Card
         Card(
             modifier = Modifier
@@ -148,51 +162,5 @@ fun DetailRow(icon: ImageVector, value: String) {
             fontWeight = FontWeight.Medium,
             color = Color.Black
         )
-    }
-}
-
-
-// TODO: A vérifier
-@Composable
-fun NodeListItem(name: String, ip: String, isOnline: Boolean, isSelected: Boolean) {
-    Card(
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) Color(0xFFE8E4F3) else Color.White
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = Modifier.width(220.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column {
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = ip,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-            Surface(
-                color = if (isOnline) Color(0xFF2ECC71) else Color(0xFFFF5252),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text(
-                    text = if (isOnline) "Online" else "Offline",
-                    color = Color.White,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
     }
 }

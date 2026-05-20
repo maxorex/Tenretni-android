@@ -1,4 +1,4 @@
-package ca.qc.cstj.tenretni.core
+package com.example.tenretni.core
 
 import androidx.annotation.StringRes
 

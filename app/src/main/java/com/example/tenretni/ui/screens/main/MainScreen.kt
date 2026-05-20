@@ -20,8 +20,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
-import ca.qc.cstj.tenretni.core.extensions.ObserveAsEvents
-import ca.qc.cstj.tenretni.core.ui.navigation.Screen
+import com.example.tenretni.core.extensions.ObserveAsEvents
+import com.example.tenretni.core.ui.navigation.Screen
 import com.example.tenretni.ui.navigation.GateWays
 import com.example.tenretni.ui.navigation.MainNavigationBar
 import com.example.tenretni.ui.navigation.MainTopBar

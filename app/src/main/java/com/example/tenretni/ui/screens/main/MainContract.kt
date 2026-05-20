@@ -1,7 +1,7 @@
 package com.example.tenretni.ui.screens.main
 
 import androidx.annotation.StringRes
-import ca.qc.cstj.tenretni.core.ui.navigation.TopBarOptions
+import com.example.tenretni.core.ui.navigation.TopBarOptions
 
 sealed interface MainAction {
     data class UpdateTopBarOptions(val topBarOptions: TopBarOptions): MainAction

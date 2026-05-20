@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
-import ca.qc.cstj.tenretni.core.ui.navigation.BottomBarOptions
-import ca.qc.cstj.tenretni.core.ui.navigation.TopLevelBackStack
+import com.example.tenretni.core.ui.navigation.BottomBarOptions
+import com.example.tenretni.core.ui.navigation.TopLevelBackStack
 
 @Composable
 fun MainNavigationBar(

@@ -7,6 +7,8 @@ import ca.qc.cstj.tenretni.core.ui.navigation.BottomBarOptions
 import ca.qc.cstj.tenretni.core.ui.navigation.BottomNavItem
 import ca.qc.cstj.tenretni.core.ui.navigation.Screen
 import ca.qc.cstj.tenretni.core.ui.navigation.TopBarOptions
+import com.example.tenretni.core.ui.navigation.BottomNavItem
+import com.example.tenretni.core.ui.navigation.Screen
 import com.example.tenretni.R
 import com.example.tenretni.models.Ticket
 
