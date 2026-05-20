@@ -1,4 +1,4 @@
-package ca.qc.cstj.tenretni.core.permission
+package com.example.tenretni.core.permission
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

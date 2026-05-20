@@ -1,4 +1,4 @@
-package ca.qc.cstj.tenretni.core.extensions
+package com.example.tenretni.core.extensions
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable

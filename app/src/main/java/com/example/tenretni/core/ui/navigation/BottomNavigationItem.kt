@@ -1,4 +1,4 @@
-package ca.qc.cstj.tenretni.core.ui.navigation
+package com.example.tenretni.core.ui.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
