@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tenretni.R
+import com.example.tenretni.ui.components.NodeCard
 
 // TODO: Les données sur l’état global du réseau doivent être mises à jour automatique à chaque 2 minutes
 // TODO: Changer pour ajouter la bd
@@ -77,12 +78,7 @@ fun NetworkScreen(
 
             items(uiState.network?.nodes ?: emptyList()) { node ->
 
-                NodeListItem(
-                    name = node.name,
-                    ip = node.connection.ip,
-                    isOnline = node.connection.status == "Online",
-                    isSelected = false
-                )
+                NodeCard(node)
             }
         }
 
@@ -166,51 +162,5 @@ fun DetailRow(icon: ImageVector, value: String) {
             fontWeight = FontWeight.Medium,
             color = Color.Black
         )
-    }
-}
-
-
-// TODO: A vérifier + faire une card avec donc node card
-@Composable
-fun NodeListItem(name: String, ip: String, isOnline: Boolean, isSelected: Boolean) {
-    Card(
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) Color(0xFFE8E4F3) else Color.White
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = Modifier.width(220.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column {
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = ip,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-            Surface(
-                color = if (isOnline) Color(0xFF2ECC71) else Color(0xFFFF5252),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text(
-                    text = if (isOnline) "Online" else "Offline",
-                    color = Color.White,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
     }
 }
