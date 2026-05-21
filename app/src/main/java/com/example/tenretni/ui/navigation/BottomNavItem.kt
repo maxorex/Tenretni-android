@@ -8,6 +8,7 @@ import com.example.tenretni.core.ui.navigation.Screen
 import com.example.tenretni.R
 import com.example.tenretni.core.ui.navigation.BottomBarOptions
 import com.example.tenretni.core.ui.navigation.TopBarOptions
+import com.example.tenretni.models.Gateway
 import com.example.tenretni.models.Ticket
 
 
@@ -33,6 +34,16 @@ data object Network : BottomNavItem, Screen {
 }
 
 data class TicketDetail(val ticket: Ticket) : Screen {
+    override val topBarOptions: TopBarOptions
+        get() = TopBarOptions(
+            isTopBarVisible = true,
+            isBackButtonVisible = true
+        )
+    override val bottomBarOptions: BottomBarOptions
+        get() = BottomBarOptions(isBottomBarVisible = false)
+}
+
+data class GatewayDetail(val gateway: Gateway) : Screen {
     override val topBarOptions: TopBarOptions
         get() = TopBarOptions(
             isTopBarVisible = true,
