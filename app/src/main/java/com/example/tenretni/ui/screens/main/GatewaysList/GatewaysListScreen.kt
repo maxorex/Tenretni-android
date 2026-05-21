@@ -3,12 +3,15 @@ package com.example.tenretni.ui.screens.main.GatewaysList
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -31,11 +34,7 @@ import com.example.tenretni.core.AsyncResult
 import com.example.tenretni.core.ui.components.ErrorMessage
 import com.example.tenretni.core.ui.components.LoadingAnimation
 import com.example.tenretni.models.Gateway
-import com.example.tenretni.models.Ticket
 import com.example.tenretni.ui.components.GatewayListCard
-import com.example.tenretni.ui.components.TicketCard
-import com.example.tenretni.ui.screens.main.ticketsList.TicketsListAction
-import com.example.tenretni.ui.screens.main.ticketsList.TicketsUiState
 
 
 @Composable
@@ -86,7 +85,24 @@ fun LandscapeMode(
     onAction: (GatewaysListAction) -> Unit,
     toGatewayDetailScreen: (Gateway) -> Unit
 ) {
-
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Column() {
+            SearchBar(
+                searchText = uiState.searchText,
+                onSearch = { searchText -> onAction(GatewaysListAction.OnSearch(searchText)) }
+            )
+            GatewaysListContent(
+                uiState = uiState,
+                onAction = onAction,
+                toGatewayDetailScreen = toGatewayDetailScreen,
+            )
+        }
+    }
 }
 
 @Composable
@@ -144,7 +160,12 @@ fun GatewaysListContent(
 
                 AsyncResult.Loading -> LoadingAnimation()
                 is AsyncResult.Success -> {
-                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
                         items(uiState.gatewayResult.data) { gateway ->
                             GatewayListCard(
                                 gateway = gateway,
