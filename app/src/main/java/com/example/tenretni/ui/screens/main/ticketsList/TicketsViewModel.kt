@@ -2,8 +2,8 @@ package com.example.tenretni.ui.screens.main.ticketsList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ca.qc.cstj.tenretni.core.AsyncResult
-import ca.qc.cstj.tenretni.core.Constants
+import com.example.tenretni.core.AsyncResult
+import com.example.tenretni.core.Constants
 import com.example.tenretni.data.repositories.TicketRepository
 import com.example.tenretni.models.Ticket
 import kotlinx.coroutines.Job

@@ -29,9 +29,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ca.qc.cstj.tenretni.core.AsyncResult
-import ca.qc.cstj.tenretni.core.ui.components.ErrorMessage
-import ca.qc.cstj.tenretni.core.ui.components.LoadingAnimation
+import com.example.tenretni.core.AsyncResult
+import com.example.tenretni.core.ui.components.ErrorMessage
+import com.example.tenretni.core.ui.components.LoadingAnimation
 import com.example.tenretni.models.Ticket
 import com.example.tenretni.ui.components.TicketCard
 
@@ -152,7 +152,7 @@ fun TicketsListContent(
             when (uiState.ticketResult) {
                 is AsyncResult.Error -> {
                     ErrorMessage(
-                        ex = uiState.ticketResult.messageResId as Exception,
+                        errorMessageId = uiState.ticketResult.messageResId,
                         onTryAgainClick = { onAction(TicketsListAction.RefreshTicket) }
                     )
                 }
