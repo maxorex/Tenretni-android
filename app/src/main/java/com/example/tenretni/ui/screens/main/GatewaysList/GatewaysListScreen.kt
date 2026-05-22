@@ -3,7 +3,9 @@ package com.example.tenretni.ui.screens.main.GatewaysList
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,11 +33,7 @@ import com.example.tenretni.core.AsyncResult
 import com.example.tenretni.core.ui.components.ErrorMessage
 import com.example.tenretni.core.ui.components.LoadingAnimation
 import com.example.tenretni.models.Gateway
-import com.example.tenretni.models.Ticket
 import com.example.tenretni.ui.components.GatewayListCard
-import com.example.tenretni.ui.components.TicketCard
-import com.example.tenretni.ui.screens.main.ticketsList.TicketsListAction
-import com.example.tenretni.ui.screens.main.ticketsList.TicketsUiState
 
 
 @Composable
@@ -86,7 +84,24 @@ fun LandscapeMode(
     onAction: (GatewaysListAction) -> Unit,
     toGatewayDetailScreen: (Gateway) -> Unit
 ) {
-
+    Row(
+        modifier = Modifier.fillMaxSize().padding(horizontal = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            SearchBar(
+                searchText = uiState.searchText,
+                onSearch = { searchText -> onAction(GatewaysListAction.OnSearch(searchText)) }
+            )
+        }
+        Column(modifier = Modifier.weight(2f)) {
+            GatewaysListContent(
+                uiState = uiState,
+                onAction = onAction,
+                toGatewayDetailScreen = toGatewayDetailScreen,
+            )
+        }
+    }
 }
 
 @Composable
@@ -111,7 +126,7 @@ fun SearchBar(
             )
         },
         placeholder = {
-            Text("Search for a ticket number", fontWeight = FontWeight.SemiBold)
+            Text("Search for a serial number", fontWeight = FontWeight.SemiBold)
         }
     )
 }
