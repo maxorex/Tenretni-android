@@ -27,7 +27,7 @@ import com.example.tenretni.models.Config
 import com.example.tenretni.models.Connection
 import com.example.tenretni.models.Customer
 import com.example.tenretni.models.Gateway
-import com.example.tenretni.ui.screens.main.network.DetailRow
+import com.example.tenretni.ui.components.DetailRow
 import com.example.tenretni.ui.theme.TenretniTheme
 
 
