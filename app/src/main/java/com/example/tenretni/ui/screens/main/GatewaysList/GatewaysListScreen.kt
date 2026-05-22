@@ -1,4 +1,4 @@
-package com.example.tenretni.ui.screens.main.ticketsList
+package com.example.tenretni.ui.screens.main.GatewaysList
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
@@ -32,13 +32,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tenretni.core.AsyncResult
 import com.example.tenretni.core.ui.components.ErrorMessage
 import com.example.tenretni.core.ui.components.LoadingAnimation
-import com.example.tenretni.models.Ticket
-import com.example.tenretni.ui.components.TicketCard
+import com.example.tenretni.models.Gateway
+import com.example.tenretni.ui.components.GatewayListCard
+
 
 @Composable
-fun TicketsScreen(
-    viewModel: TicketsViewModel = viewModel(),
-    toTicketDetailScreen: (Ticket) -> Unit
+fun GatewaysListScreen(
+    viewModel: GatewaysListViewModel = viewModel(),
+    toGatewayDetailScreen: (Gateway) -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val orientation = LocalConfiguration.current.orientation
@@ -47,42 +48,41 @@ fun TicketsScreen(
         PortraitMode(
             uiState = uiState,
             onAction = viewModel::onAction,
-            toTicketDetailScreen = toTicketDetailScreen
+            toGatewayDetailScreen = toGatewayDetailScreen
         )
     } else {
         LandscapeMode(
             uiState = uiState,
             onAction = viewModel::onAction,
-            toTicketDetailScreen = toTicketDetailScreen
+            toGatewayDetailScreen = toGatewayDetailScreen
         )
     }
 }
 
 @Composable
-private fun PortraitMode(
-    uiState: TicketsUiState,
-    onAction: (TicketsListAction) -> Unit,
-    toTicketDetailScreen: (Ticket) -> Unit
+fun PortraitMode(
+    uiState: GatewaysListUiState,
+    onAction: (GatewaysListAction) -> Unit,
+    toGatewayDetailScreen: (Gateway) -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column() {
         SearchBar(
             searchText = uiState.searchText,
-            onSearch = { searchText -> onAction(TicketsListAction.OnSearch(searchText)) }
+            onSearch = { searchText -> onAction(GatewaysListAction.OnSearch(searchText)) }
         )
-
-        TicketsListContent(
+        GatewaysListContent(
             uiState = uiState,
             onAction = onAction,
-            toTicketDetailScreen = toTicketDetailScreen,
+            toGatewayDetailScreen = toGatewayDetailScreen,
         )
     }
 }
 
 @Composable
-private fun LandscapeMode(
-    uiState: TicketsUiState,
-    onAction: (TicketsListAction) -> Unit,
-    toTicketDetailScreen: (Ticket) -> Unit
+fun LandscapeMode(
+    uiState: GatewaysListUiState,
+    onAction: (GatewaysListAction) -> Unit,
+    toGatewayDetailScreen: (Gateway) -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxSize().padding(horizontal = 4.dp),
@@ -91,14 +91,14 @@ private fun LandscapeMode(
         Column(modifier = Modifier.weight(1f)) {
             SearchBar(
                 searchText = uiState.searchText,
-                onSearch = { searchText -> onAction(TicketsListAction.OnSearch(searchText)) }
+                onSearch = { searchText -> onAction(GatewaysListAction.OnSearch(searchText)) }
             )
         }
         Column(modifier = Modifier.weight(2f)) {
-            TicketsListContent(
+            GatewaysListContent(
                 uiState = uiState,
                 onAction = onAction,
-                toTicketDetailScreen = toTicketDetailScreen,
+                toGatewayDetailScreen = toGatewayDetailScreen,
             )
         }
     }
@@ -126,16 +126,16 @@ fun SearchBar(
             )
         },
         placeholder = {
-            Text("Search for a ticket number", fontWeight = FontWeight.SemiBold)
+            Text("Search for a serial number", fontWeight = FontWeight.SemiBold)
         }
     )
 }
 
 @Composable
-fun TicketsListContent(
-    uiState: TicketsUiState,
-    onAction: (TicketsListAction) -> Unit,
-    toTicketDetailScreen: (Ticket) -> Unit,
+fun GatewaysListContent(
+    uiState: GatewaysListUiState,
+    onAction: (GatewaysListAction) -> Unit,
+    toGatewayDetailScreen: (Gateway) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         AnimatedVisibility(visible = uiState.isRefreshing) {
@@ -147,24 +147,24 @@ fun TicketsListContent(
         PullToRefreshBox(
             modifier = Modifier.fillMaxSize(),
             isRefreshing = uiState.isRefreshing,
-            onRefresh = { onAction(TicketsListAction.RefreshTicket) }
+            onRefresh = { onAction(GatewaysListAction.RefreshGateways) }
         ) {
-            when (uiState.ticketResult) {
+            when (uiState.gatewayResult) {
                 is AsyncResult.Error -> {
                     ErrorMessage(
-                        errorMessageId = uiState.ticketResult.messageResId,
-                        onTryAgainClick = { onAction(TicketsListAction.RefreshTicket) }
+                        errorMessageId = uiState.gatewayResult.messageResId,
+                        onTryAgainClick = { onAction(GatewaysListAction.RefreshGateways) }
                     )
                 }
 
                 AsyncResult.Loading -> LoadingAnimation()
                 is AsyncResult.Success -> {
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
-                        items(uiState.ticketResult.data) { ticket ->
-                            TicketCard(
-                                ticket = ticket,
+                        items(uiState.gatewayResult.data) { gateway ->
+                            GatewayListCard(
+                                gateway = gateway,
                                 onClick = {
-                                    toTicketDetailScreen(ticket)
+                                    toGatewayDetailScreen(gateway)
                                 }
                             )
                         }

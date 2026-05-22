@@ -1,4 +1,4 @@
-package ca.qc.cstj.tenretni.core.ui.components
+package com.example.tenretni.core.ui.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

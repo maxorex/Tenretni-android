@@ -1,6 +1,6 @@
 package com.example.tenretni.data.datasources
 
-import ca.qc.cstj.tenretni.core.Constants
+import com.example.tenretni.core.Constants
 import com.example.tenretni.models.Network
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.json.responseJson
@@ -12,7 +12,7 @@ class NetworkDataSource {
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    fun retrieveAll(): List<Network> {
+    fun retrieveAll(): Network {
         val (_, _, result) = Constants.BaseURL.NETWORK.httpGet().responseJson()
 
         return when (result) {

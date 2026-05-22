@@ -20,14 +20,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
-import ca.qc.cstj.tenretni.core.extensions.ObserveAsEvents
-import ca.qc.cstj.tenretni.core.ui.navigation.Screen
+import com.example.tenretni.core.extensions.ObserveAsEvents
+import com.example.tenretni.core.ui.navigation.Screen
 import com.example.tenretni.ui.navigation.GateWays
+import com.example.tenretni.ui.navigation.GatewayDetail
 import com.example.tenretni.ui.navigation.MainNavigationBar
 import com.example.tenretni.ui.navigation.MainTopBar
 import com.example.tenretni.ui.navigation.Network
+import com.example.tenretni.ui.navigation.TicketDetail
 import com.example.tenretni.ui.navigation.Tickets
+import com.example.tenretni.ui.screens.main.GatewaysList.GatewaysListScreen
+import com.example.tenretni.ui.screens.main.gatewayInfo.GatewayInfoScreen
 import com.example.tenretni.ui.screens.main.network.NetworkScreen
+import com.example.tenretni.ui.screens.main.ticketInfo.TicketDetailsScreen
 import com.example.tenretni.ui.screens.main.ticketsList.TicketsScreen
 import kotlinx.coroutines.launch
 
@@ -99,10 +104,20 @@ fun MainScreen(
             onBack = { uiState.topLevelBackStack.removeLast() },
             entryProvider = entryProvider {
                 entry<Tickets> {
-                    TicketsScreen()
+                    TicketsScreen(toTicketDetailScreen = { ticket ->
+                        uiState.topLevelBackStack.add(TicketDetail(ticket))
+                    })
+                }
+                entry<TicketDetail> { ticketDetail ->
+                    TicketDetailsScreen(ticket = ticketDetail.ticket)
                 }
                 entry<GateWays> {
-                    Text("Gateways Screen")
+                    GatewaysListScreen(toGatewayDetailScreen = { gateway ->
+                        uiState.topLevelBackStack.add(GatewayDetail(gateway))
+                    })
+                }
+                entry<GatewayDetail> { gatewayDetail ->
+                    GatewayInfoScreen(gateway = gatewayDetail.gateway)
                 }
                 entry<Network> {
                     NetworkScreen()

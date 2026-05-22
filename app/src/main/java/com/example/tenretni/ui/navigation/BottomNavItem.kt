@@ -3,9 +3,14 @@ package com.example.tenretni.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import ca.qc.cstj.tenretni.core.ui.navigation.BottomNavItem
-import ca.qc.cstj.tenretni.core.ui.navigation.Screen
+import com.example.tenretni.core.ui.navigation.BottomNavItem
+import com.example.tenretni.core.ui.navigation.Screen
 import com.example.tenretni.R
+import com.example.tenretni.core.ui.navigation.BottomBarOptions
+import com.example.tenretni.core.ui.navigation.TopBarOptions
+import com.example.tenretni.models.Gateway
+import com.example.tenretni.models.Ticket
+
 
 data object Tickets: BottomNavItem, Screen {
     override val icon: ImageVector
@@ -27,3 +32,24 @@ data object Network : BottomNavItem, Screen {
     override val title: String
         @Composable get() = "Network"
 }
+
+data class TicketDetail(val ticket: Ticket) : Screen {
+    override val topBarOptions: TopBarOptions
+        get() = TopBarOptions(
+            isTopBarVisible = true,
+            isBackButtonVisible = true
+        )
+    override val bottomBarOptions: BottomBarOptions
+        get() = BottomBarOptions(isBottomBarVisible = false)
+}
+
+data class GatewayDetail(val gateway: Gateway) : Screen {
+    override val topBarOptions: TopBarOptions
+        get() = TopBarOptions(
+            isTopBarVisible = true,
+            isBackButtonVisible = true
+        )
+    override val bottomBarOptions: BottomBarOptions
+        get() = BottomBarOptions(isBottomBarVisible = false)
+}
+

@@ -1,6 +1,6 @@
-package ca.qc.cstj.tenretni.core.helpers
+package com.example.tenretni.core.helpers
 
-import ca.qc.cstj.tenretni.core.Constants
+import com.example.tenretni.core.Constants
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime
 import java.time.Instant

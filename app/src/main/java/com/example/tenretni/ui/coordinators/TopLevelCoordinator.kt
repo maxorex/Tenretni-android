@@ -14,6 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.example.tenretni.ui.navigation.Route
+import com.example.tenretni.ui.screens.main.GatewaysList.GatewaysListScreen
 import com.example.tenretni.ui.screens.main.MainScreen
 import com.example.tenretni.ui.screens.main.ticketsList.TicketsScreen
 import com.example.tenretni.ui.screens.main.title.TitleScreen
@@ -37,11 +38,19 @@ fun TopLevelCoordinator(
                 MainScreen()
             }
             entry<Route.ToTicketsScreen> {
-                TicketsScreen()
+                TicketsScreen(
+                    toTicketDetailScreen = { }
+                )
             }
             entry<Route.ToTitleScreen> {
                 TitleScreen(
                     navigateToMain = { backStack.add(Route.toMainScreen) }
+                )
+
+            }
+            entry<Route.ToGateWaysScreen> {
+                GatewaysListScreen(
+                    toGatewayDetailScreen = {}
                 )
 
             }

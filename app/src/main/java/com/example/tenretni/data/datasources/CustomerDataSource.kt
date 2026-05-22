@@ -1,6 +1,6 @@
 package com.example.tenretni.data.datasources
 
-import ca.qc.cstj.tenretni.core.Constants
+import com.example.tenretni.core.Constants
 import com.example.tenretni.models.Customer
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.json.responseJson

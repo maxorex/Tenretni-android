@@ -2,7 +2,7 @@ package com.example.tenretni.ui.screens.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ca.qc.cstj.tenretni.core.ui.navigation.TopBarOptions
+import com.example.tenretni.core.ui.navigation.TopBarOptions
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
