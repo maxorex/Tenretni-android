@@ -30,21 +30,24 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tenretni.core.helpers.ColorHelper
 import com.example.tenretni.models.Node
+import com.example.tenretni.ui.theme.ConnectionStatusColor
 
 // TODO C: A vérifier + rendre plus clean
 // TODO C: Fix toute les couleur
 @Composable
 fun NodeCard(
     node: Node,
+    isSelected: Boolean = false,
     onNodeClick: (Node) -> Unit = {}
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            // TODO C: isSelected a faire
-            containerColor = /*if (isSelected) Color(0xFFE8E4F3) else*/ Color.White
-        ),
+//        colors = CardDefaults.cardColors(
+//            // TODO C: isSelected a faire
+//            containerColor = if (isSelected) Color.DarkGray// Color(0xFFE8E4F3) else Color.White
+//        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier.width(220.dp)
             .clickable {
@@ -71,7 +74,7 @@ fun NodeCard(
             }
             Surface(
                 // TODO C: Utiliser les couleur et le texte traduit
-                color = if (node.connection.status == "Online") Color(0xFF2ECC71) else Color(0xFFFF5252),
+                color = ColorHelper.connectionStatusColor(node.connection.status),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
@@ -114,7 +117,7 @@ fun NodeDetailsCard(node: Node){
 
             // TODO C: Couleur
             Surface(
-                color = Color(0xFF2ECC71),
+                color = ColorHelper.connectionStatusColor(node.connection.status),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Text(
