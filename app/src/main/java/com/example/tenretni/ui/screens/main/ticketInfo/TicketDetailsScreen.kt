@@ -102,6 +102,7 @@ fun TicketDetailsScreen(
             modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
+            // TODO: 5 et 6
             ActionButton(text = "Install", onClick = { /* TODO */ })
             ActionButton(text = "Solve", onClick = { /* TODO */ })
         }
@@ -191,7 +192,7 @@ fun CustomerSection(customer: Customer) {
             }
             
             IconButton(
-                onClick = { /* TODO */ },
+                onClick = { /* TODO: 4*/ },
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
                     .size(56.dp)
