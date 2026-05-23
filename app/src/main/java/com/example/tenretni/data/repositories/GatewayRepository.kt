@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
+import kotlinx.coroutines.flow.map
+
 class GatewayRepository(
     private val gatewayDataSource: GatewayDataSource = GatewayDataSource()
 ) {
@@ -18,5 +20,11 @@ class GatewayRepository(
         }.catch { ex ->
             throw ex
         }.flowOn(Dispatchers.IO)
+    }
+
+    fun retrieveOne(serialNumber: String): Flow<Gateway?> {
+        return retrieveAll().map { gateways ->
+            gateways.find { it.serialNumber == serialNumber }
+        }
     }
 }

@@ -7,5 +7,7 @@
     <string name="_10">/10 ...</string>
     <string name="n_a">N/A</string>
     <string name="no_coordinates">Aucune coordonnée disponible pour ce ticket</string>
-    <string name="my_location">ma localisation</string>
+    <string name="my_location">Ma localisation</string>
+    <string name="kernel_version">Version de Kernel %d</string>
+    <string name="version">Version %s</string>
 </resources>
