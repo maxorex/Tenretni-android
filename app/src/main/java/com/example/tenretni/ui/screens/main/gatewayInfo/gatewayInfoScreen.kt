@@ -60,11 +60,9 @@ private fun PortraitMode(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Online Badge
         Surface(
             color = if (gateway.connection.status == "Online") Color(0xFF2ECC71) else Color.Red,
             shape = RoundedCornerShape(16.dp)
