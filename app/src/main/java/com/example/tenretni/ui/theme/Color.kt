@@ -28,6 +28,6 @@ object TicketStatusColor {
 }
 
 object CardColor {
-    val Default =  Color(0xFFF2F2F2)
+    val Default =  Color(0xFFF4F3FA)
     val Selected = Color(0xFFCCCCCC)
 }
