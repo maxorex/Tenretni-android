@@ -27,6 +27,7 @@ object TicketStatusColor {
     val Solved = Color(0xFF2D3436)
 }
 
-//object CardColor {
-//    val Default =
-//}
+object CardColor {
+    val Default =  Color(0xFFF2F2F2)
+    val Selected = Color(0xFFCCCCCC)
+}

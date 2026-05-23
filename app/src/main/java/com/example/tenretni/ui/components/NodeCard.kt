@@ -1,5 +1,6 @@
 package com.example.tenretni.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tenretni.core.helpers.ColorHelper
 import com.example.tenretni.models.Node
+import com.example.tenretni.ui.theme.CardColor
 import com.example.tenretni.ui.theme.ConnectionStatusColor
 
 // TODO C: A vérifier + rendre plus clean
@@ -39,15 +41,14 @@ import com.example.tenretni.ui.theme.ConnectionStatusColor
 @Composable
 fun NodeCard(
     node: Node,
-    isSelected: Boolean = false,
-    onNodeClick: (Node) -> Unit = {}
+    onNodeClick: (Node) -> Unit = {},
+    isSelected: Boolean = false
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
-//        colors = CardDefaults.cardColors(
-//            // TODO C: isSelected a faire
-//            containerColor = if (isSelected) Color.DarkGray// Color(0xFFE8E4F3) else Color.White
-//        ),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isSelected) CardColor.Selected else CardColor.Default
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier.width(220.dp)
             .clickable {
@@ -98,7 +99,7 @@ fun NodeDetailsCard(node: Node){
             .fillMaxWidth()
             .padding(horizontal = 8.dp),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF9F9F9)),
+        colors = CardDefaults.cardColors(containerColor = CardColor.Default),
         border = CardDefaults.outlinedCardBorder().copy(width = 0.5.dp, brush = androidx.compose.ui.graphics.SolidColor(Color.LightGray.copy(alpha = 0.5f)))
     ) {
         Column(

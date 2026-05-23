@@ -79,7 +79,7 @@ fun NetworkScreen(
 
             items(uiState.network?.nodes ?: emptyList()) { node ->
 
-                NodeCard(node, onNodeClick = { viewModel.selectNode(node) })
+                NodeCard(node, onNodeClick = { viewModel.selectNode(node) }, uiState.selectedNode == node)
             }
         }
 
