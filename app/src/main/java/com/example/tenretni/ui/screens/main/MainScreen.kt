@@ -30,6 +30,7 @@ import com.example.tenretni.ui.navigation.Network
 import com.example.tenretni.ui.navigation.TicketDetail
 import com.example.tenretni.ui.navigation.Tickets
 import com.example.tenretni.ui.screens.main.GatewaysList.GatewaysListScreen
+import com.example.tenretni.ui.screens.main.gatewayInfo.GatewayInfoScreen
 import com.example.tenretni.ui.screens.main.network.NetworkScreen
 import com.example.tenretni.ui.screens.main.ticketInfo.TicketDetailsScreen
 import com.example.tenretni.ui.screens.main.ticketsList.TicketsScreen
@@ -114,6 +115,9 @@ fun MainScreen(
                     GatewaysListScreen(toGatewayDetailScreen = { gateway ->
                         uiState.topLevelBackStack.add(GatewayDetail(gateway))
                     })
+                }
+                entry<GatewayDetail> { gatewayDetail ->
+                    GatewayInfoScreen(gateway = gatewayDetail.gateway)
                 }
                 entry<Network> {
                     NetworkScreen()

@@ -27,7 +27,7 @@ import com.example.tenretni.models.Config
 import com.example.tenretni.models.Connection
 import com.example.tenretni.models.Customer
 import com.example.tenretni.models.Gateway
-import com.example.tenretni.ui.screens.main.network.DetailRow
+import com.example.tenretni.ui.components.DetailRow
 import com.example.tenretni.ui.theme.TenretniTheme
 
 
@@ -66,11 +66,11 @@ private fun PortraitMode(
     ) {
         // Online Badge
         Surface(
-            color = Color(0xFF2ECC71),
+            color = if (gateway.connection.status == "Online") Color(0xFF2ECC71) else Color.Red,
             shape = RoundedCornerShape(16.dp)
         ) {
             Text(
-                text = "Online",
+                text = gateway.connection.status,
                 color = Color.White,
                 modifier = Modifier.padding(horizontal = 48.dp, vertical = 6.dp),
                 fontWeight = FontWeight.Bold,
@@ -82,16 +82,16 @@ private fun PortraitMode(
 
         // Serial Number
         Text(
-            text = "db6ac1f64ad53d3d",
+            text = gateway.serialNumber,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = Color.Black
         )
 
         // Config Info
-        Text(text = "MAC: 62:71:48:b5:be:b0", style = MaterialTheme.typography.bodyLarge)
-        Text(text = "SSID: solid_state.bandwidth.PNG", style = MaterialTheme.typography.bodyLarge)
-        Text(text = "PIN: 64fe75fc", style = MaterialTheme.typography.bodyLarge)
+        Text(text = "MAC: ${gateway.config.mac}", style = MaterialTheme.typography.bodyLarge)
+        Text(text = "SSID: ${gateway.config.SSID}", style = MaterialTheme.typography.bodyLarge)
+        Text(text = "PIN: ${gateway.pin}", style = MaterialTheme.typography.bodyLarge)
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -115,16 +115,16 @@ private fun PortraitMode(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    text = "246.160.160.97",
+                    text = gateway.connection.ip,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
 
-                DetailRow(icon = Icons.Default.SwapHoriz, value = "16 ns")
-                DetailRow(icon = Icons.Default.CloudDownload, value = "22.569 Ebps")
-                DetailRow(icon = Icons.Default.CloudUpload, value = "3.190 Ebps")
-                DetailRow(icon = Icons.Default.SignalCellularAlt, value = "-28 dBm")
+                DetailRow(icon = Icons.Default.SwapHoriz, value = "${gateway.connection.ping} ns")
+                DetailRow(icon = Icons.Default.CloudDownload, value = "${gateway.connection.download} Ebps")
+                DetailRow(icon = Icons.Default.CloudUpload, value = "${gateway.connection.upload} Ebps")
+                DetailRow(icon = Icons.Default.SignalCellularAlt, value = "${gateway.connection.signal} dBm")
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -133,12 +133,12 @@ private fun PortraitMode(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Kernel revision 1",
+                        text = "Kernel revision ${gateway.config.kernelRevision}",
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "Version 1.0.0",
+                        text = "Version ${gateway.config.version}",
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold
                     )
