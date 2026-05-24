@@ -26,14 +26,18 @@ import com.example.tenretni.ui.navigation.GateWays
 import com.example.tenretni.ui.navigation.GatewayDetail
 import com.example.tenretni.ui.navigation.MainNavigationBar
 import com.example.tenretni.ui.navigation.MainTopBar
+import com.example.tenretni.ui.navigation.MapRoute
 import com.example.tenretni.ui.navigation.Network
 import com.example.tenretni.ui.navigation.TicketDetail
 import com.example.tenretni.ui.navigation.Tickets
 import com.example.tenretni.ui.screens.main.GatewaysList.GatewaysListScreen
 import com.example.tenretni.ui.screens.main.gatewayInfo.GatewayInfoScreen
+import com.example.tenretni.ui.screens.main.map.MapScreen
 import com.example.tenretni.ui.screens.main.network.NetworkScreen
 import com.example.tenretni.ui.screens.main.ticketInfo.TicketDetailsScreen
 import com.example.tenretni.ui.screens.main.ticketsList.TicketsScreen
+import com.example.tenretni.R
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 
 
@@ -109,7 +113,25 @@ fun MainScreen(
                     })
                 }
                 entry<TicketDetail> { ticketDetail ->
-                    TicketDetailsScreen(ticket = ticketDetail.ticket)
+                    TicketDetailsScreen(
+                        ticket = ticketDetail.ticket,
+                        toMapScreen = { latLng ->
+                            uiState.topLevelBackStack.add(
+                                MapRoute(
+                                    latLng.latitude.toFloat(),
+                                    latLng.longitude.toFloat()
+                                )
+                            )
+                        }
+                    )
+                }
+                entry<MapRoute> { coord ->
+                    MapScreen(
+                        latLng = LatLng(
+                            coord.latitude.toDouble(),
+                            coord.longitude.toDouble()
+                        )
+                    )
                 }
                 entry<GateWays> {
                     GatewaysListScreen(toGatewayDetailScreen = { gateway ->

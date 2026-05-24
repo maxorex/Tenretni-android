@@ -16,6 +16,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.example.tenretni.ui.navigation.Route
 import com.example.tenretni.ui.screens.main.GatewaysList.GatewaysListScreen
 import com.example.tenretni.ui.screens.main.MainScreen
+import com.example.tenretni.ui.screens.main.network.NetworkScreen
 import com.example.tenretni.ui.screens.main.ticketsList.TicketsScreen
 import com.example.tenretni.ui.screens.main.title.TitleScreen
 
@@ -52,7 +53,9 @@ fun TopLevelCoordinator(
                 GatewaysListScreen(
                     toGatewayDetailScreen = {}
                 )
-
+            }
+            entry<Route.ToNetworkScreen> {
+                NetworkScreen()
             }
         }
     )

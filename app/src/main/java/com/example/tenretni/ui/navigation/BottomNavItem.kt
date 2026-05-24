@@ -53,3 +53,13 @@ data class GatewayDetail(val gateway: Gateway) : Screen {
         get() = BottomBarOptions(isBottomBarVisible = false)
 }
 
+data class MapRoute(val latitude: Float, val longitude: Float) : Screen {
+    override val topBarOptions: TopBarOptions
+        get() = TopBarOptions(
+            isTopBarVisible = true,
+            isBackButtonVisible = true
+        )
+    override val bottomBarOptions: BottomBarOptions
+        get() = BottomBarOptions(isBottomBarVisible = false)
+}
+
