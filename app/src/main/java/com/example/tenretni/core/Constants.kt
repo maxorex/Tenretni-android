@@ -23,6 +23,13 @@ object Constants {
         const val TICKET_REFRESH_DELAY = 60000L
     }
 
+    object LoadingTimer{
+        // TODO: Dois être a 10000
+//        const val LOADING_TIMER = 10000L
+        const val LOADING_TIMER = 1000L
+        const val LOADING_INTERVAL = 1000L
+    }
+
     enum class TicketPriority {
         Low, Normal, High, Critical
     }

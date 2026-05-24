@@ -161,7 +161,7 @@ fun DetailRow(icon: ImageVector, value: String) {
             modifier = Modifier.size(32.dp),
             tint = Color.Black
         )
-        Spacer(modifier = Modifier.width(16.dp))
+//        Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = value,
             style = MaterialTheme.typography.headlineSmall,

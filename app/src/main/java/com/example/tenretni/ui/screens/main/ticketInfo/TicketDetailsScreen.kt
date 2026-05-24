@@ -53,6 +53,7 @@ import com.example.tenretni.models.Connection
 import com.example.tenretni.models.Customer
 import com.example.tenretni.models.Gateway
 import com.example.tenretni.models.Ticket
+import com.example.tenretni.ui.components.TicketCard
 import com.example.tenretni.ui.components.TicketBadge
 import com.example.tenretni.ui.screens.main.ticketsList.priorityBackgroundColor
 import com.example.tenretni.ui.screens.main.ticketsList.statusBackgroundColor
@@ -80,8 +81,8 @@ fun TicketDetailsScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Ticket Info Header
-        TicketHeader(ticket)
+
+        TicketCard(ticket)
 
         // Customer Info Section
         val customerResult = uiState.customerResult
