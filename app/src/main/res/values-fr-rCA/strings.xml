@@ -10,4 +10,5 @@
     <string name="my_location">Ma localisation</string>
     <string name="kernel_version">Version de Kernel %d</string>
     <string name="version">Version %s</string>
+    <string name="qr_code_error">QR Code Error</string>
 </resources>
