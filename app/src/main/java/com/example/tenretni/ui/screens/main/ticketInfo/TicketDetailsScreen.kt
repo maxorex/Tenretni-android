@@ -69,7 +69,7 @@ fun TicketDetailsScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(ticket.customer.href) {
-        viewModel.startRefreshing(ticket.customer.href)
+        //viewModel.startRefreshing(ticket.customer.href)
     }
 
     Column(

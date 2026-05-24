@@ -11,17 +11,15 @@ import com.example.tenretni.ui.screens.main.ticketsList.TicketsUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import com.example.tenretni.R
 import com.example.tenretni.data.repositories.TicketRepository
+import com.example.tenretni.models.Gateway
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-
-
-=======
->>>>>>> e73317496dfb73af48b8358fc3c47cdbc6deae93
 class TicketDetailsViewModel : ViewModel() {
 
 
@@ -30,7 +28,7 @@ class TicketDetailsViewModel : ViewModel() {
 
     val uiState = _uiState.asStateFlow()
 
-<<<<<<< HEAD
+
 //    fun updateTicketStatus(status: String) {
 //        _uiState.update { uiState ->
 //            val currentTicket = uiState.ticket
@@ -46,9 +44,27 @@ class TicketDetailsViewModel : ViewModel() {
 
     private val ticketRepository = TicketRepository()
 
-    private fun installGateway() {
+    private fun startRefreshing(href: String) {
         viewModelScope.launch {
 
+        }
+    }
+
+    private fun installGateway(rawQr: Gateway?) {
+        viewModelScope.launch {
+            if(rawQr == null){
+                _events.send(TicketDetailsEvent.OnError(R.string.qr_code_error))
+                return@launch
+            }
+
+//            val gateway = Gateway()
+        }
+    }
+
+    fun onAction(action: TicketDetailsAction){
+        when(action){
+            is TicketDetailsAction.Install -> installGateway(action.qrContent)
+            TicketDetailsAction.Refresh -> TODO()
         }
     }
 }
