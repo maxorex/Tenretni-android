@@ -115,15 +115,23 @@ fun MainScreen(
                 entry<TicketDetail> { ticketDetail ->
                     TicketDetailsScreen(
                         ticket = ticketDetail.ticket,
-                        toMapScreen = {
-                            val coord = ticketDetail.ticket.customer.coord ?: com.example.tenretni.models.Coordinate(45.5017f, -73.5673f)
-                            uiState.topLevelBackStack.add(MapRoute(coord.latitude, coord.longitude))
-                            viewModel.onAction(MainAction.UpdateTopBarOptions(uiState.topBarOptions)) // Trigger recomposition
+                        toMapScreen = { latLng ->
+                            uiState.topLevelBackStack.add(
+                                MapRoute(
+                                    latLng.latitude.toFloat(),
+                                    latLng.longitude.toFloat()
+                                )
+                            )
                         }
                     )
                 }
-                entry<MapRoute> { mapRoute ->
-                    MapScreen(latLng = LatLng(mapRoute.latitude.toDouble(), mapRoute.longitude.toDouble()))
+                entry<MapRoute> { coord ->
+                    MapScreen(
+                        latLng = LatLng(
+                            coord.latitude.toDouble(),
+                            coord.longitude.toDouble()
+                        )
+                    )
                 }
                 entry<GateWays> {
                     GatewaysListScreen(toGatewayDetailScreen = { gateway ->

@@ -1,42 +1,5 @@
 package com.example.tenretni.ui.screens.main.ticketInfo
 
-<<<<<<< HEAD
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MyLocation
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import com.example.tenretni.models.Ticket
-import com.example.tenretni.R
-
-
-@Composable
-fun TicketDetailsScreen(ticket: Ticket, toMapScreen: () -> Unit ) {
-
-
-
-}
-
-@Composable
-fun LocationButton(toMapScreen: () -> Unit) {
-    Button(
-        onClick = toMapScreen,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Icon(
-            imageVector = Icons.Default.MyLocation,
-            contentDescription = stringResource(R.string.my_location),
-            modifier = Modifier.padding(end = 8.dp)
-        )
-    }
-}
-=======
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fitInside
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -62,8 +26,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -73,9 +35,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -92,11 +56,14 @@ import com.example.tenretni.models.Ticket
 import com.example.tenretni.ui.components.TicketBadge
 import com.example.tenretni.ui.screens.main.ticketsList.priorityBackgroundColor
 import com.example.tenretni.ui.screens.main.ticketsList.statusBackgroundColor
+import com.example.tenretni.R
+import com.google.android.gms.maps.model.LatLng
 
 @Composable
 fun TicketDetailsScreen(
     ticket: Ticket,
-    viewModel: TicketDetailsViewModel = viewModel()
+    viewModel: TicketDetailsViewModel = viewModel(),
+    toMapScreen: (LatLng) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -119,9 +86,17 @@ fun TicketDetailsScreen(
         // Customer Info Section
         val customerResult = uiState.customerResult
         if (customerResult is AsyncResult.Success) {
-            CustomerSection(customer = customerResult.data)
+            CustomerSection(customer = customerResult.data, onLocationClick = {
+                customerResult.data.coord?.let {
+                    toMapScreen(LatLng(it.latitude.toDouble(), it.longitude.toDouble()))
+                }
+            })
         } else {
-            CustomerSection(customer = ticket.customer)
+            CustomerSection(customer = ticket.customer, onLocationClick = {
+                ticket.customer.coord?.let {
+                    toMapScreen(LatLng(it.latitude.toDouble(), it.longitude.toDouble()))
+                }
+            })
         }
 
         // Gateways Section
@@ -182,7 +157,7 @@ fun TicketHeader(ticket: Ticket) {
 }
 
 @Composable
-fun CustomerSection(customer: Customer) {
+fun CustomerSection(customer: Customer, onLocationClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -227,25 +202,8 @@ fun CustomerSection(customer: Customer) {
                         .clip(RoundedCornerShape(4.dp))
                 )
             }
-            
-            IconButton(
-                onClick = { /* TODO: 4*/ },
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .size(56.dp)
-                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(12.dp)),
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = Color(0xFFB3E5FC),
-                    contentColor = Color.Black
-                ),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.MyLocation,
-                    contentDescription = "Locate",
-                    modifier = Modifier.size(28.dp)
-                )
-            }
+
+            LocationButton(onLocationClick)
         }
     }
 }
@@ -432,7 +390,21 @@ fun TicketDetailsScreenPreview() {
         customer = dummyCustomer
     )
     MaterialTheme {
-        TicketDetailsScreen(ticket = dummyTicket)
+        TicketDetailsScreen(ticket = dummyTicket, toMapScreen = {})
     }
 }
->>>>>>> 640e17eb507f859ad9772f51485fc1bd828185b0
+
+@Composable
+fun LocationButton(toMapScreen: () -> Unit) {
+    Button(
+        onClick = toMapScreen,
+        shape = RoundedCornerShape(12.dp),
+        contentPadding = PaddingValues(0.dp),
+        modifier = Modifier.size(48.dp),
+    ) {
+        Icon(
+            imageVector = Icons.Default.MyLocation,
+            contentDescription = stringResource(R.string.my_location)
+        )
+    }
+}

@@ -1,6 +1,9 @@
 package com.example.tenretni.ui.screens.main.gatewayInfo
 
+import android.R.attr.background
+import android.R.id.background
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,7 +15,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CloudDownload
@@ -37,8 +43,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.tenretni.R
 import com.example.tenretni.core.AsyncResult
+import com.example.tenretni.core.extensions.painterResourceFromString
 import com.example.tenretni.core.helpers.ColorHelper
 import com.example.tenretni.models.Gateway
 import com.example.tenretni.ui.components.DetailRow
@@ -112,7 +120,34 @@ private fun PortraitMode(
 private fun LandscapeMode(
     gateway: Gateway
 ) {
-
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Info(gateway)
+                IconsRow(gateway)
+                ColorBar(gateway.hash)
+            }
+            Box(modifier = Modifier.weight(1f)) {
+                StatsCard(gateway)
+            }
+        }
+        Buttons()
+    }
 }
 
 @Composable
@@ -162,11 +197,13 @@ private fun Info(
 private fun IconsRow(
     gateway: Gateway
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-
+    LazyRow {
+        items(gateway.config.kernel) { kernel ->
+            Image(
+                painter = painterResourceFromString("element_${kernel}"),
+                contentDescription = null
+            )
+        }
     }
 }
 
@@ -245,17 +282,36 @@ private fun StatsCard(
 }
 
 @Composable
-private fun ColorBar(
-    hash : String
-) {
+private fun ColorBar(hash: String) {
+
+    val start = hash.take(2)
+    val end = hash.takeLast(2)
+
+    val colors = hash
+        .drop(2)
+        .dropLast(2)
+        .chunked(6)
+
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        verticalAlignment = Alignment.CenterVertically
     ) {
 
+        Text(start)
+
+        colors.forEach { colorHex ->
+
+            Box(
+                modifier = Modifier
+                    .size(20.dp)
+                    .background(
+                        Color(
+                            android.graphics.Color.parseColor("#$colorHex")
+                        )
+                    )
+            )
+        }
+
+        Text(end)
     }
 }
 
