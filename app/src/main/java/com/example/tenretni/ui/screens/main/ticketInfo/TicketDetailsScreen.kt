@@ -1,14 +1,16 @@
 package com.example.tenretni.ui.screens.main.ticketInfo
 
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.fitInside
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -36,9 +38,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -47,18 +48,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.tenretni.R
 import com.example.tenretni.core.AsyncResult
 import com.example.tenretni.core.Constants
+import com.example.tenretni.core.extensions.ObserveAsEvents
 import com.example.tenretni.models.Connection
 import com.example.tenretni.models.Customer
 import com.example.tenretni.models.Gateway
 import com.example.tenretni.models.Ticket
-import com.example.tenretni.ui.components.TicketCard
 import com.example.tenretni.ui.components.TicketBadge
+import com.example.tenretni.ui.components.TicketCard
 import com.example.tenretni.ui.screens.main.ticketsList.priorityBackgroundColor
 import com.example.tenretni.ui.screens.main.ticketsList.statusBackgroundColor
-import com.example.tenretni.R
 import com.google.android.gms.maps.model.LatLng
+import io.github.g00fy2.quickie.QRResult
+import io.github.g00fy2.quickie.ScanCustomCode
 
 @Composable
 fun TicketDetailsScreen(
@@ -67,9 +71,45 @@ fun TicketDetailsScreen(
     toMapScreen: (LatLng) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(ticket.customer.href) {
-        //viewModel.startRefreshing(ticket.customer.href)
+        viewModel.startRefreshing(ticket.customer.href)
+    }
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is TicketDetailsEvent.OnError -> Toast.makeText(
+                context,
+                event.errorRes,
+                Toast.LENGTH_LONG
+            ).show()
+
+            TicketDetailsEvent.OnInstallSuccess -> TODO()
+        }
+    }
+
+    val scanQrCodeLauncher = rememberLauncherForActivityResult(ScanCustomCode()) { qrResult ->
+        when (qrResult) {
+            is QRResult.QRError -> {
+                Toast.makeText(
+                    context,
+                    R.string.error_while_scanning_qr_code, Toast.LENGTH_LONG
+                ).show()
+            }
+
+            QRResult.QRMissingPermission -> {
+                Toast.makeText(
+                    context,
+                    R.string.missing_permission, Toast.LENGTH_LONG
+                ).show()
+            }
+
+            is QRResult.QRSuccess -> {
+                viewModel.onAction(TicketDetailsAction.Install(qrResult.content.rawValue))
+            }
+            QRResult.QRUserCanceled -> TODO()
+        }
     }
 
     Column(
@@ -112,7 +152,9 @@ fun TicketDetailsScreen(
 
         // Action Buttons
         Row(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             // TODO: 5 et 6
@@ -154,8 +196,14 @@ fun TicketHeader(ticket: Ticket) {
                     color = Color.Gray
                 )
             }
-            Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                TicketBadge(text = ticket.priority, backgroundColor = ticket.priorityBackgroundColor)
+            Column(
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                TicketBadge(
+                    text = ticket.priority,
+                    backgroundColor = ticket.priorityBackgroundColor
+                )
                 TicketBadge(text = ticket.status, backgroundColor = ticket.statusBackgroundColor)
             }
         }
@@ -170,7 +218,11 @@ fun CustomerSection(customer: Customer, onLocationClick: () -> Unit) {
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -196,9 +248,9 @@ fun CustomerSection(customer: Customer, onLocationClick: () -> Unit) {
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 AsyncImage(
                     model = Constants.FLAG_API_URL.format(customer.country.lowercase()),
                     contentDescription = "Country Flag",
@@ -227,7 +279,7 @@ fun GatewaySection(gateways: List<Gateway>) {
             fontWeight = FontWeight.Normal,
             modifier = Modifier.padding(top = 8.dp)
         )
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -248,7 +300,7 @@ fun GatewaySection(gateways: List<Gateway>) {
 fun GatewayCard(modifier: Modifier = Modifier, gateway: Gateway) {
     val isOnline = gateway.connection.status == "Online"
     val statusColor = if (isOnline) Color(0xFF2ECC71) else Color(0xFFFF4757)
-    
+
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -276,16 +328,25 @@ fun GatewayCard(modifier: Modifier = Modifier, gateway: Gateway) {
                     fontSize = 14.sp
                 )
             }
-            
+
             if (isOnline) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    GatewayInfoRow(icon = Icons.Default.SyncAlt, text = "${gateway.connection.ping.toInt()} ns")
-                    GatewayInfoRow(icon = Icons.Default.CloudDownload, text = "%.3f Ebps".format(gateway.connection.download))
-                    GatewayInfoRow(icon = Icons.Default.CloudUpload, text = "%.3f Ebps".format(gateway.connection.upload))
+                    GatewayInfoRow(
+                        icon = Icons.Default.SyncAlt,
+                        text = "${gateway.connection.ping.toInt()} ns"
+                    )
+                    GatewayInfoRow(
+                        icon = Icons.Default.CloudDownload,
+                        text = "%.3f Ebps".format(gateway.connection.download)
+                    )
+                    GatewayInfoRow(
+                        icon = Icons.Default.CloudUpload,
+                        text = "%.3f Ebps".format(gateway.connection.upload)
+                    )
                 }
             } else {
                 Box(
@@ -300,7 +361,7 @@ fun GatewayCard(modifier: Modifier = Modifier, gateway: Gateway) {
                     )
                 }
             }
-            
+
             Text(
                 text = gateway.hash,
                 style = MaterialTheme.typography.labelSmall,
@@ -373,7 +434,12 @@ fun TicketDetailsScreenPreview() {
                 pin = "1111",
                 hash = "db6ac1f64ad53d3d",
                 customer = Customer(),
-                connection = Connection(status = "Online", ping = 16f, download = 22.569f, upload = 3.190f),
+                connection = Connection(
+                    status = "Online",
+                    ping = 16f,
+                    download = 22.569f,
+                    upload = 3.190f
+                ),
                 config = com.example.tenretni.models.Config()
             ),
             Gateway(

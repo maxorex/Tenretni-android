@@ -2,7 +2,10 @@ package com.example.tenretni.data.datasources
 
 import com.example.tenretni.core.Constants
 import com.example.tenretni.models.Customer
+import com.example.tenretni.models.Gateway
+import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.json.responseJson
 import com.github.kittinunf.result.Result
 import kotlinx.serialization.json.Json

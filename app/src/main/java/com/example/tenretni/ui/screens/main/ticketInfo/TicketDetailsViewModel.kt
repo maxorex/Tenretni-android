@@ -2,19 +2,17 @@ package com.example.tenretni.ui.screens.main.ticketInfo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tenretni.R
 import com.example.tenretni.core.AsyncResult
 import com.example.tenretni.core.Constants
 import com.example.tenretni.data.repositories.CustomerRepository
+import com.example.tenretni.data.repositories.GatewayRepository
+import com.example.tenretni.data.repositories.TicketRepository
 import com.example.tenretni.models.Customer
-import com.example.tenretni.models.Ticket
-import com.example.tenretni.ui.screens.main.ticketsList.TicketsUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import com.example.tenretni.R
-import com.example.tenretni.data.repositories.TicketRepository
-import com.example.tenretni.models.Gateway
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -37,6 +35,8 @@ class TicketDetailsViewModel : ViewModel() {
 
     private val ticketRepository = TicketRepository()
     private val customerRepository = CustomerRepository()
+
+    private val gatewayRepository = GatewayRepository()
 
     fun startRefreshing(customerHref: String) {
         refreshJob?.cancel()
@@ -61,14 +61,19 @@ class TicketDetailsViewModel : ViewModel() {
     }
 
 
-    private fun installGateway(rawQr: Gateway?) {
+    private fun installGateway(rawQr: String?) {
         viewModelScope.launch {
-            if(rawQr == null){
+            if (rawQr == null) {
                 _events.send(TicketDetailsEvent.OnError(R.string.qr_code_error))
                 return@launch
             }
 
-//            val gateway = Gateway()
+//            gatewayRepository.installCustomerGateway()
+
+//            val customerGateway =
+
+
+
         }
     }
 
@@ -80,8 +85,8 @@ class TicketDetailsViewModel : ViewModel() {
 //        }
 //    }
 
-    fun onAction(action: TicketDetailsAction){
-        when(action){
+    fun onAction(action: TicketDetailsAction) {
+        when (action) {
             is TicketDetailsAction.Install -> installGateway(action.qrContent)
             TicketDetailsAction.Refresh -> TODO()
         }

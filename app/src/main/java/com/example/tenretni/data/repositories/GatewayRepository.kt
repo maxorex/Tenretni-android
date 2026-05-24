@@ -27,4 +27,12 @@ class GatewayRepository(
             gateways.find { it.serialNumber == serialNumber }
         }
     }
+
+    fun installCustomerGateway(customerId: String, gateway: Gateway): Flow<Gateway> {
+        return flow {
+            emit(gatewayDataSource.installCustomerGateway(customerId, gateway))
+        }.catch { ex ->
+            throw ex
+        }.flowOn(Dispatchers.IO)
+    }
 }
