@@ -3,7 +3,7 @@
 
 Épreuve Synthèse - Volet A
 
-Matias Godbout - 
+Matias Godbout, 2290121 - B
 
 Charles Boudreault, 2133738 - C
 
