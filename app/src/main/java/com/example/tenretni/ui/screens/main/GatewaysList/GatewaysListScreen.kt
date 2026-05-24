@@ -5,11 +5,13 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -85,24 +87,7 @@ fun LandscapeMode(
     onAction: (GatewaysListAction) -> Unit,
     toGatewayDetailScreen: (Gateway) -> Unit
 ) {
-    Row(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            SearchBar(
-                searchText = uiState.searchText,
-                onSearch = { searchText -> onAction(GatewaysListAction.OnSearch(searchText)) }
-            )
-        }
-        Column(modifier = Modifier.weight(2f)) {
-            GatewaysListContent(
-                uiState = uiState,
-                onAction = onAction,
-                toGatewayDetailScreen = toGatewayDetailScreen,
-            )
-        }
-    }
+
 }
 
 @Composable
@@ -127,7 +112,7 @@ fun SearchBar(
             )
         },
         placeholder = {
-            Text("Search for a serial number", fontWeight = FontWeight.SemiBold)
+            Text("Search for a ticket number", fontWeight = FontWeight.SemiBold)
         }
     )
 }
@@ -160,16 +145,23 @@ fun GatewaysListContent(
 
                 AsyncResult.Loading -> LoadingAnimation()
                 is AsyncResult.Success -> {
-                    LazyColumn(modifier = Modifier.fillMaxSize()) {
-                        items(uiState.gatewayResult.data) { gateway ->
-                            GatewayListCard(
-                                gateway = gateway,
-                                onClick = {
-                                    toGatewayDetailScreen(gateway)
-                                }
-                            )
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+
+                            items(uiState.gatewayResult.data) { gateway ->
+                                GatewayListCard(
+                                    gateway = gateway,
+                                    onClick = {
+                                        toGatewayDetailScreen(gateway)
+                                    }
+                                )
+                            }
                         }
-                    }
+
                 }
             }
         }

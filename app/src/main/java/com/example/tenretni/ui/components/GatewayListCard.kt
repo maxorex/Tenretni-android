@@ -6,10 +6,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CloudDownload
+import androidx.compose.material.icons.filled.CloudUpload
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +43,8 @@ fun GatewayListCard(
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(10.dp).fillMaxWidth()
         ) {
             GatewayListStatus(
                 text = gateway.connection.status,
@@ -47,16 +55,25 @@ fun GatewayListCard(
                 Text(text = gateway.serialNumber)
             } else {
                 Row() {
-                    // Icon here
-                    Text(text = gateway.pin)
+                    Icon(
+                        imageVector = Icons.Default.SwapHoriz,
+                        contentDescription = Icons.Default.SwapHoriz.toString()
+                    )
+                    Text(text = gateway.connection.ping.toString()+" ns")
                 }
                 Row() {
-                    // icon here
-                    Text(text = gateway.connection.download.toString())
+                    Icon(
+                        imageVector = Icons.Default.CloudDownload,
+                        contentDescription = Icons.Default.CloudDownload.toString()
+                    )
+                    Text(text = gateway.connection.download.toString() + " Ebps")
                 }
                 Row() {
-                    // icon here
-                    Text(text = gateway.connection.upload.toString())
+                    Icon(
+                        imageVector = Icons.Default.CloudUpload,
+                        contentDescription = Icons.Default.CloudUpload.toString()
+                    )
+                    Text(text = gateway.connection.upload.toString() + " Ebps")
                 }
                 Text(text = gateway.serialNumber)
             }
