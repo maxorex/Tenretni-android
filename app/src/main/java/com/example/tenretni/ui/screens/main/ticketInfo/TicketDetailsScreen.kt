@@ -116,7 +116,12 @@ fun TicketDetailsScreen(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             // TODO: 5 et 6
-            ActionButton(text = "Install", onClick = { /* TODO */ })
+            ActionButton(text = "Install", onClick = {
+
+//                ticket.status = status.copy()
+//
+//                })
+            })
             ActionButton(text = "Solve", onClick = { /* TODO */ })
         }
     }
