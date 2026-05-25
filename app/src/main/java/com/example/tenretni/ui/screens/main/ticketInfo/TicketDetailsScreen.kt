@@ -1,9 +1,12 @@
 package com.example.tenretni.ui.screens.main.ticketInfo
 
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,9 +39,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -47,19 +49,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.tenretni.R
 import com.example.tenretni.core.AsyncResult
 import com.example.tenretni.core.Constants
+import com.example.tenretni.core.extensions.ObserveAsEvents
+import com.example.tenretni.core.ui.components.ErrorMessage
+import com.example.tenretni.core.ui.components.LoadingAnimation
 import com.example.tenretni.models.Connection
 import com.example.tenretni.models.Customer
 import com.example.tenretni.models.Gateway
 import com.example.tenretni.models.Ticket
-import com.example.tenretni.ui.components.TicketCard
 import com.example.tenretni.ui.components.TicketBadge
+import com.example.tenretni.ui.components.TicketCard
 import com.example.tenretni.ui.screens.main.ticketsList.priorityBackgroundColor
 import com.example.tenretni.ui.screens.main.ticketsList.statusBackgroundColor
-import com.example.tenretni.R
-import com.example.tenretni.ui.screens.main.ticketsList.TicketsListAction
 import com.google.android.gms.maps.model.LatLng
+import io.github.g00fy2.quickie.QRResult
+import io.github.g00fy2.quickie.ScanCustomCode
+import io.github.g00fy2.quickie.config.BarcodeFormat
+import io.github.g00fy2.quickie.config.ScannerConfig
 
 @Composable
 fun TicketDetailsScreen(
@@ -68,9 +76,51 @@ fun TicketDetailsScreen(
     toMapScreen: (LatLng) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(ticket.customer.href) {
         viewModel.startRefreshing(ticket.customer.href)
+    }
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is TicketDetailsEvent.OnError -> Toast.makeText(
+                context,
+                event.errorRes,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    val scanQrCodeLauncher = rememberLauncherForActivityResult(ScanCustomCode()) { qrResult ->
+        when (qrResult) {
+            is QRResult.QRError -> {
+                Toast.makeText(
+                    context,
+                    R.string.error_while_scanning_qr_code, Toast.LENGTH_LONG
+                ).show()
+            }
+
+            QRResult.QRMissingPermission -> {
+                Toast.makeText(
+                    context,
+                    R.string.missing_permission, Toast.LENGTH_LONG
+                ).show()
+            }
+
+            is QRResult.QRSuccess -> {
+                viewModel.onAction(TicketDetailsAction.Install(ticket.customer.href,qrResult.content.rawValue))
+            }
+            QRResult.QRUserCanceled -> {}
+        }
+    }
+
+    when(val installResult = uiState.installResult){
+        is AsyncResult.Error -> ErrorMessage(installResult.messageResId)
+        AsyncResult.Loading -> LoadingAnimation()
+        is AsyncResult.Success -> LaunchedEffect(installResult) {
+            Toast.makeText(context, "Gateway installed", Toast.LENGTH_LONG).show()
+        }
     }
 
     Column(
@@ -113,20 +163,29 @@ fun TicketDetailsScreen(
 
         // Action Buttons
         Row(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             // TODO: 5 et 6
             ActionButton(text = "Install", onClick = {
+                scanQrCodeLauncher.launch(
+                    ScannerConfig.build {
+                        setBarcodeFormats(listOf(BarcodeFormat.FORMAT_ALL_FORMATS))
+                        setOverlayStringRes(R.string.scan_the_id)
+                        setShowCloseButton(true)
+                    }
+                )
 
             })
             if (ticket.status == "Open") {
                 ActionButton(text = "Solve", onClick = {
-                    onAction(TicketDetailsAction.onUpdateClick("Solve"))
+                    viewModel.onAction(TicketDetailsAction.Update("Solve", ticket.ticketNumber))
                 })
             } else {
                 ActionButton(text = "Open", onClick = {
-                    onAction(TicketDetailsAction.onUpdateClick("Open"))
+                    viewModel.onAction(TicketDetailsAction.Update("Open", ticket.ticketNumber))
                 })
             }
         }
@@ -160,8 +219,14 @@ fun TicketHeader(ticket: Ticket) {
                     color = Color.Gray
                 )
             }
-            Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                TicketBadge(text = ticket.priority, backgroundColor = ticket.priorityBackgroundColor)
+            Column(
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                TicketBadge(
+                    text = ticket.priority,
+                    backgroundColor = ticket.priorityBackgroundColor
+                )
                 TicketBadge(text = ticket.status, backgroundColor = ticket.statusBackgroundColor)
             }
         }
@@ -176,7 +241,11 @@ fun CustomerSection(customer: Customer, onLocationClick: () -> Unit) {
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -202,9 +271,9 @@ fun CustomerSection(customer: Customer, onLocationClick: () -> Unit) {
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 AsyncImage(
                     model = Constants.FLAG_API_URL.format(customer.country.lowercase()),
                     contentDescription = "Country Flag",
@@ -289,9 +358,18 @@ fun GatewayCard(modifier: Modifier = Modifier, gateway: Gateway) {
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    GatewayInfoRow(icon = Icons.Default.SyncAlt, text = "${gateway.connection.ping.toInt()} ns")
-                    GatewayInfoRow(icon = Icons.Default.CloudDownload, text = "%.3f Ebps".format(gateway.connection.download))
-                    GatewayInfoRow(icon = Icons.Default.CloudUpload, text = "%.3f Ebps".format(gateway.connection.upload))
+                    GatewayInfoRow(
+                        icon = Icons.Default.SyncAlt,
+                        text = "${gateway.connection.ping.toInt()} ns"
+                    )
+                    GatewayInfoRow(
+                        icon = Icons.Default.CloudDownload,
+                        text = "%.3f Ebps".format(gateway.connection.download)
+                    )
+                    GatewayInfoRow(
+                        icon = Icons.Default.CloudUpload,
+                        text = "%.3f Ebps".format(gateway.connection.upload)
+                    )
                 }
             } else {
                 Box(
@@ -379,7 +457,12 @@ fun TicketDetailsScreenPreview() {
                 pin = "1111",
                 hash = "db6ac1f64ad53d3d",
                 customer = Customer(),
-                connection = Connection(status = "Online", ping = 16f, download = 22.569f, upload = 3.190f),
+                connection = Connection(
+                    status = "Online",
+                    ping = 16f,
+                    download = 22.569f,
+                    upload = 3.190f
+                ),
                 config = com.example.tenretni.models.Config()
             ),
             Gateway(
