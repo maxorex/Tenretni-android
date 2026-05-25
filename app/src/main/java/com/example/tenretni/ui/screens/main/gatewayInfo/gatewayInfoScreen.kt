@@ -178,11 +178,11 @@ private fun Info(
 private fun IconsRow(
     gateway: Gateway
 ) {
-    LazyRow {
-        items(gateway.config.kernel) { kernel ->
+    Row {
+        gateway.config.kernel.forEach { kernel ->
             Image(
                 painter = painterResourceFromString("element_${kernel}"),
-                contentDescription = null
+                contentDescription = kernel
             )
         }
     }
@@ -198,7 +198,7 @@ private fun StatsCard(
             .padding(horizontal = 10.dp),
         shape = RoundedCornerShape(20.dp),
     ) {
-        if (gateway.connection.status == "online") {
+        if (gateway.connection.status == "Online") {
             Column(
                 modifier = Modifier
                     .padding(24.dp)

@@ -58,6 +58,7 @@ import com.example.tenretni.core.AsyncResult
 import com.example.tenretni.core.Constants
 import com.example.tenretni.core.extensions.ObserveAsEvents
 import com.example.tenretni.core.extensions.OnResume
+import com.example.tenretni.core.helpers.ColorHelper
 import com.example.tenretni.core.ui.components.ErrorMessage
 import com.example.tenretni.core.ui.components.LoadingAnimation
 import com.example.tenretni.models.Connection
@@ -67,8 +68,7 @@ import com.example.tenretni.models.Ticket
 import com.example.tenretni.ui.components.GatewayListCard
 import com.example.tenretni.ui.components.TicketBadge
 import com.example.tenretni.ui.components.TicketCard
-import com.example.tenretni.ui.screens.main.ticketsList.priorityBackgroundColor
-import com.example.tenretni.ui.screens.main.ticketsList.statusBackgroundColor
+
 import com.google.android.gms.maps.model.LatLng
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanCustomCode
@@ -265,9 +265,11 @@ fun TicketHeader(ticket: Ticket) {
             ) {
                 TicketBadge(
                     text = ticket.priority,
-                    backgroundColor = ticket.priorityBackgroundColor
+                    backgroundColor = ColorHelper.ticketPriorityColor(ticket.priority)
                 )
-                TicketBadge(text = ticket.status, backgroundColor = ticket.statusBackgroundColor)
+                TicketBadge(text = ticket.status,
+                    backgroundColor = ColorHelper.ticketStatusColor(ticket.status)
+                )
             }
         }
     }

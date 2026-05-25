@@ -18,12 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tenretni.R
+import com.example.tenretni.core.helpers.ColorHelper
 import com.example.tenretni.models.Ticket
-import com.example.tenretni.ui.screens.main.ticketsList.priorityBackgroundColor
-import com.example.tenretni.ui.screens.main.ticketsList.statusBackgroundColor
 
 @Composable
 fun TicketCard(
@@ -50,7 +51,7 @@ fun TicketCard(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = "Ticket ${ticket.ticketNumber}",
+                    text = stringResource(R.string.ticket,ticket.ticketNumber ),
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Normal,
                         fontSize = 20.sp
@@ -70,11 +71,11 @@ fun TicketCard(
             ) {
                 TicketBadge(
                     text = ticket.priority,
-                    backgroundColor = ticket.priorityBackgroundColor
+                    backgroundColor = ColorHelper.ticketPriorityColor(ticket.priority)
                 )
                 TicketBadge(
                     text = ticket.status,
-                    backgroundColor = ticket.statusBackgroundColor
+                    backgroundColor = ColorHelper.ticketStatusColor(ticket.status)
                 )
             }
         }
@@ -96,10 +97,7 @@ fun TicketBadge(
         Text(
             text = text,
             color = Color.White,
-            style = MaterialTheme.typography.labelLarge.copy(
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
-            )
+            style = MaterialTheme.typography.labelLarge
         )
     }
 }

@@ -23,4 +23,5 @@
 
     <string name="error_while_refreshing_gateways">Error while refreshing gateways</string>
     <string name="gateway_installed_successfully">Gateway installed successfully</string>
+    <string name="ticket">Ticket %s</string>
 </resources>

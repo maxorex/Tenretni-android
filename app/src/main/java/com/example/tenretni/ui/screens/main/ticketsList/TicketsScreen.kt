@@ -90,13 +90,13 @@ private fun LandscapeMode(
         modifier = Modifier.fillMaxSize().padding(horizontal = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Column(modifier = Modifier.weight(1f)) {
+        Column() {
             SearchBar(
                 searchText = uiState.searchText,
                 onSearch = { searchText -> onAction(TicketsListAction.OnSearch(searchText)) }
             )
         }
-        Column(modifier = Modifier.weight(2f)) {
+        Column() {
             TicketsListContent(
                 uiState = uiState,
                 onAction = onAction,
@@ -115,10 +115,7 @@ fun SearchBar(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .border(
-                width = 1.dp, color = LocalTextStyle.current.color, shape = RoundedCornerShape(8.dp)
-            ),
+            .clip(RoundedCornerShape(8.dp)),
         value = searchText,
         onValueChange = { value -> onSearch(value) },
         leadingIcon = {
