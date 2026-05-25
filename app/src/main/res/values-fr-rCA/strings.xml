@@ -17,4 +17,7 @@
     <string name="scan_the_id">Scan the id</string>
     <string name="ticket_search">Rechercher un Id de ticket</string>
     <string name="search">rechercher</string>
+    <string name="online">online</string>
+    <string name="update">Update</string>
+    <string name="reboot">reboot</string>
 </resources>

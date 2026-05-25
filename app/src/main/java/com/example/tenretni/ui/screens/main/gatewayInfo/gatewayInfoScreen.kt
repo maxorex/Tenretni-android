@@ -217,7 +217,7 @@ private fun StatsCard(
             .padding(horizontal = 10.dp),
         shape = RoundedCornerShape(20.dp),
     ) {
-        if (gateway.connection.status == stringResource(R.string)) {
+        if (gateway.connection.status == "online") {
             Column(
                 modifier = Modifier
                     .padding(24.dp)
@@ -333,7 +333,7 @@ private fun Buttons(
                 .padding(end = 8.dp),
             shape = RoundedCornerShape(24.dp)
         ) {
-            Text("Update", color = Color.White)
+            Text(stringResource(R.string.update), color = Color.White)
         }
         Button(
             onClick = { /* TODO */ },
@@ -343,7 +343,7 @@ private fun Buttons(
                 .padding(start = 8.dp),
             shape = RoundedCornerShape(24.dp)
         ) {
-            Text("Reboot", color = Color.White)
+            Text(stringResource(R.string.reboot), color = Color.White)
         }
     }
 }
