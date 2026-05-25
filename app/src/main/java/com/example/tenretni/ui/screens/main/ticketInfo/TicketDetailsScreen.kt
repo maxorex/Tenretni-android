@@ -58,6 +58,7 @@ import com.example.tenretni.ui.components.TicketBadge
 import com.example.tenretni.ui.screens.main.ticketsList.priorityBackgroundColor
 import com.example.tenretni.ui.screens.main.ticketsList.statusBackgroundColor
 import com.example.tenretni.R
+import com.example.tenretni.ui.screens.main.ticketsList.TicketsListAction
 import com.google.android.gms.maps.model.LatLng
 
 @Composable
@@ -69,7 +70,7 @@ fun TicketDetailsScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(ticket.customer.href) {
-        //viewModel.startRefreshing(ticket.customer.href)
+        viewModel.startRefreshing(ticket.customer.href)
     }
 
     Column(
@@ -118,11 +119,16 @@ fun TicketDetailsScreen(
             // TODO: 5 et 6
             ActionButton(text = "Install", onClick = {
 
-//                ticket.status = status.copy()
-//
-//                })
             })
-            ActionButton(text = "Solve", onClick = { /* TODO */ })
+            if (ticket.status == "Open") {
+                ActionButton(text = "Solve", onClick = {
+                    onAction(TicketDetailsAction.onUpdateClick("Solve"))
+                })
+            } else {
+                ActionButton(text = "Open", onClick = {
+                    onAction(TicketDetailsAction.onUpdateClick("Open"))
+                })
+            }
         }
     }
 }

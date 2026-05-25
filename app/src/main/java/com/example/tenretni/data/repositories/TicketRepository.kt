@@ -20,4 +20,12 @@ class TicketRepository(
             throw ex
         }.flowOn(Dispatchers.IO)
     }
+
+    fun updateStatus(ticketId: String, status: String): Flow<Ticket> {
+        return flow {
+            emit(ticketDataSource.updateStatus(ticketId, status))
+        }.catch { ex ->
+            throw ex
+        }.flowOn(Dispatchers.IO)
+    }
 }

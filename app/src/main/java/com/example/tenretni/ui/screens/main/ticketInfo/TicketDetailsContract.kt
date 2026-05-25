@@ -7,7 +7,9 @@ sealed interface TicketDetailsAction {
 
     data class  Install(val qrContent: Gateway?) : TicketDetailsAction
 
+    data class Update(val status: String, val ticketId: String) : TicketDetailsAction
     data object Refresh : TicketDetailsAction
+
 
 }
 sealed interface TicketDetailsEvent {

@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlin.collections.find
 
 class TicketDetailsViewModel : ViewModel() {
 
@@ -72,17 +73,23 @@ class TicketDetailsViewModel : ViewModel() {
         }
     }
 
-    //    fun updateTicketStatus(status: String) {
-//        _uiState.update { uiState ->
-//            val currentTicket = uiState.ticket
-//
-//            uiState.copy(ticket = currentTicket.copy(status = status))
-//        }
-//    }
+    fun updateTicketStatus(status: String, ticketId: String) {
+        viewModelScope.launch {
+            ticketRepository.updateStatus(ticketId, status)
+                .flowOn(Dispatchers.IO)
+                .catch { ex ->
+                    _uiState.update { it.copy(ticketResult = AsyncResult.Error(ex.hashCode())) }
+                }
+                .collect { updatedTicket ->
+                    _uiState.update { it.copy(ticketResult = AsyncResult.Success(updatedTicket)) }
+                }
+        }
+    }
 
     fun onAction(action: TicketDetailsAction){
         when(action){
             is TicketDetailsAction.Install -> installGateway(action.qrContent)
+            is TicketDetailsAction.Update -> updateTicketStatus(action.status, action.ticketId)
             TicketDetailsAction.Refresh -> TODO()
         }
     }
