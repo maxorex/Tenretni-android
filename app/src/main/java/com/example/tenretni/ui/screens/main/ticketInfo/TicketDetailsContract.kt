@@ -6,7 +6,7 @@ sealed interface TicketDetailsAction {
 
     data class Install(val customerHref: String?,val qrContent: String?) : TicketDetailsAction
 
-    data object Refresh : TicketDetailsAction
+    data class Refresh(val customerHref: String) : TicketDetailsAction
 
 }
 sealed interface TicketDetailsEvent {

@@ -9,18 +9,18 @@ import com.example.tenretni.core.Constants
 import com.example.tenretni.data.repositories.CustomerRepository
 import com.example.tenretni.data.repositories.GatewayRepository
 import com.example.tenretni.data.repositories.TicketRepository
-import kotlinx.coroutines.Dispatchers
+import com.example.tenretni.models.Gateway
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 class TicketDetailsViewModel : ViewModel() {
 
@@ -43,7 +43,6 @@ class TicketDetailsViewModel : ViewModel() {
         refreshJob = viewModelScope.launch {
             while (isActive) {
                 customerRepository.retrieveAll()
-                    .flowOn(Dispatchers.IO)
                     .catch { ex ->
                         _uiState.update { it.copy(customerResult = AsyncResult.Error(ex.hashCode())) }
                     }
@@ -52,10 +51,24 @@ class TicketDetailsViewModel : ViewModel() {
                         if (customer != null) {
                             _uiState.update { it.copy(customerResult = AsyncResult.Success(customer)) }
                         } else {
-                            _uiState.update { it.copy(customerResult = AsyncResult.Error(0)) }
+                            _uiState.update { it.copy(customerResult = AsyncResult.Error(customer.hashCode())) }
                         }
                     }
                 delay(Constants.RefreshDelay.CUSTOMER_GATEWAY_REFRESH_DELAY)
+            }
+        }
+    }
+
+    fun refreshGateways(customerHref: String) {
+        viewModelScope.launch {
+            gatewayRepository.retrieveCustomerGateways(customerHref).catch {
+                _uiState.update {
+                    it.copy(customerGateways = AsyncResult.Error(R.string.error_while_refreshing_gateways))
+                }
+            }.collect { gateways ->
+                _uiState.update {
+                    it.copy(customerGateways = AsyncResult.Success(gateways))
+                }
             }
         }
     }
@@ -68,20 +81,21 @@ class TicketDetailsViewModel : ViewModel() {
                 return@launch
             }
 
-            if(customerHref.isNullOrBlank()) {
+            if (customerHref.isNullOrBlank()) {
                 viewModelScope.launch {
                     _events.send(TicketDetailsEvent.OnError(R.string.error_while_creating_installing_the_new_gateway))
                     return@launch
                 }
             }
 
-
             gatewayRepository.installCustomerGateway(customerHref, rawQr).catch {
                 _events.send(TicketDetailsEvent.OnError(R.string.error_while_creating_installing_the_new_gateway))
+                AsyncResult.Error(R.string.error_while_creating_installing_the_new_gateway)
             }.collect {
+                val gatewayFromString = Json.decodeFromString<Gateway>(it)
+                AsyncResult.Success(gatewayFromString)
                 Log.d("INSTALL", it)
             }
-
 
 
         }
@@ -97,8 +111,8 @@ class TicketDetailsViewModel : ViewModel() {
 
     fun onAction(action: TicketDetailsAction) {
         when (action) {
-            is TicketDetailsAction.Install -> installGateway(action.customerHref,action.qrContent)
-            TicketDetailsAction.Refresh -> TODO()
+            is TicketDetailsAction.Install -> installGateway(action.customerHref, action.qrContent)
+            is TicketDetailsAction.Refresh -> refreshGateways(action.customerHref)
         }
     }
 }

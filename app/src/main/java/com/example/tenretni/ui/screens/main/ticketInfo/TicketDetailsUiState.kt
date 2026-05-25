@@ -6,5 +6,6 @@ import com.example.tenretni.models.Gateway
 
 data class TicketDetailsUiState(
     val installResult: AsyncResult<Gateway> = AsyncResult.Loading,
+    val customerGateways: AsyncResult<List<Gateway>> = AsyncResult.Loading,
     val customerResult: AsyncResult<Customer> = AsyncResult.Loading
 )
