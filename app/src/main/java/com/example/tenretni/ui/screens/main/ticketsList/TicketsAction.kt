@@ -7,5 +7,4 @@ sealed interface TicketsListAction {
 
     data class OnSearch(val searchText: String) : TicketsListAction
 
-    data class OpenTicketDetail(val ticket: Ticket) : TicketsListAction
 }

@@ -217,7 +217,7 @@ private fun StatsCard(
             .padding(horizontal = 10.dp),
         shape = RoundedCornerShape(20.dp),
     ) {
-        if (gateway.connection.status == "Online") {
+        if (gateway.connection.status == stringResource(R.string)) {
             Column(
                 modifier = Modifier
                     .padding(24.dp)

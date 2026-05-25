@@ -53,8 +53,8 @@ class TicketsViewModel : ViewModel() {
     }
 
     private fun search(newSearchText: String) {
-        _uiState.update { currentState ->
-            currentState.copy(
+        _uiState.update { state ->
+            state.copy(
                 searchText = newSearchText,
                 ticketResult = AsyncResult.Success(filterTickets(allTickets, newSearchText))
             )
@@ -71,7 +71,6 @@ class TicketsViewModel : ViewModel() {
         when (action) {
             TicketsListAction.RefreshTicket -> refreshTicket()
             is TicketsListAction.OnSearch -> search(action.searchText)
-            is TicketsListAction.OpenTicketDetail -> { /* Handled by UI navigation */ }
         }
     }
 

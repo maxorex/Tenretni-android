@@ -83,7 +83,6 @@ class GatewaysListViewModel : ViewModel() {
     fun onAction(action: GatewaysListAction) {
         when (action) {
             is GatewaysListAction.OnSearch -> search(action.searchText)
-            is GatewaysListAction.OpenGatewayDetails -> {}
             GatewaysListAction.RefreshGateways -> refreshGateways()
         }
     }
