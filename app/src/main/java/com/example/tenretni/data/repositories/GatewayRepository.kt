@@ -36,9 +36,9 @@ class GatewayRepository(
         }.flowOn(Dispatchers.IO)
     }
 
-    fun installCustomerGateway(customerId: String?, gatewayInfo: String): Flow<String> {
+    fun installCustomerGateway(customerHref: String?, gatewayInfo: String): Flow<String> {
         return flow {
-            emit(gatewayDataSource.installCustomerGateway(customerId, gatewayInfo))
+            emit(gatewayDataSource.installCustomerGateway(customerHref, gatewayInfo))
         }.catch { ex ->
             throw ex
         }.flowOn(Dispatchers.IO)

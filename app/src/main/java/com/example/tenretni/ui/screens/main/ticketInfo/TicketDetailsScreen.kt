@@ -100,6 +100,12 @@ fun TicketDetailsScreen(
                 event.errorRes,
                 Toast.LENGTH_LONG
             ).show()
+
+            is TicketDetailsEvent.OnSuccess -> Toast.makeText(
+                context,
+                event.message,
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -138,7 +144,6 @@ fun TicketDetailsScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF1F5F9))
-            .verticalScroll(rememberScrollState())
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -163,47 +168,43 @@ fun TicketDetailsScreen(
         }
 
         // Gateways Section
-        val gateways = if (customerResult is AsyncResult.Success) {
-            customerResult.data.gateways
-        } else {
-            ticket.customer.gateways
-        }
-        GatewaySection(gateways = gateways, onGatewayClick = onGatewayClick)
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+        ) {
+            when (val customerGateways = uiState.customerGateways) {
+                is AsyncResult.Error -> ErrorMessage(customerGateways.messageResId)
+                AsyncResult.Loading -> LoadingAnimation()
+                is AsyncResult.Success -> {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
 
-        when (val customerGateways = uiState.customerGateways) {
-            is AsyncResult.Error -> ErrorMessage(customerGateways.messageResId)
-            AsyncResult.Loading -> LoadingAnimation()
-            is AsyncResult.Success -> {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    modifier = Modifier.height(200.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-
-                    items(customerGateways.data) { gateway ->
-                        GatewayListCard(
-                            gateway = gateway,
-                            onClick = {
-                                onGatewayClick(gateway)
-                            }
-                        )
+                        items(customerGateways.data) { gateway ->
+                            GatewayListCard(
+                                gateway = gateway,
+                                onClick = {
+                                    onGatewayClick(gateway)
+                                }
+                            )
+                        }
                     }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
-
         // Action Buttons
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
 
-            // TODO: 5 et 6
+            // TODO: 5
             ActionButton(text = "Install", onClick = {
                 scanQrCodeLauncher.launch(
                     ScannerConfig.build {
@@ -320,113 +321,6 @@ fun CustomerSection(customer: Customer, onLocationClick: () -> Unit) {
     }
 }
 
-@Composable
-fun GatewaySection(gateways: List<Gateway>, onGatewayClick: (Gateway) -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Text(
-            text = "Gateways",
-            style = MaterialTheme.typography.displaySmall,
-            fontWeight = FontWeight.Normal,
-            modifier = Modifier.padding(top = 8.dp)
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            gateways.forEach { gateway ->
-                GatewayCard(modifier = Modifier.weight(1f), gateway = gateway, onClick = {onGatewayClick(gateway)})
-            }
-            if (gateways.isEmpty()) {
-                Text(text = "No gateways found", modifier = Modifier.padding(16.dp))
-            } else if (gateways.size == 1) {
-                Spacer(modifier = Modifier.weight(1f))
-            }
-        }
-    }
-}
-
-@Composable
-fun GatewayCard(gateway: Gateway, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    val isOnline = gateway.connection.status == "Online"
-    val statusColor = if (isOnline) Color(0xFF2ECC71) else Color(0xFFFF4757)
-
-    Card(
-        modifier = modifier.clickable(onClick = onClick),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            // Status Header
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(50))
-                    .background(statusColor)
-                    .padding(vertical = 6.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = gateway.connection.status,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
-                )
-            }
-
-            if (isOnline) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    GatewayInfoRow(
-                        icon = Icons.Default.SyncAlt,
-                        text = "${gateway.connection.ping.toInt()} ns"
-                    )
-                    GatewayInfoRow(
-                        icon = Icons.Default.CloudDownload,
-                        text = "%.3f Ebps".format(gateway.connection.download)
-                    )
-                    GatewayInfoRow(
-                        icon = Icons.Default.CloudUpload,
-                        text = "%.3f Ebps".format(gateway.connection.upload)
-                    )
-                }
-            } else {
-                Box(
-                    modifier = Modifier.height(80.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "N/A",
-                        style = MaterialTheme.typography.displayMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF2D3436)
-                    )
-                }
-            }
-
-            Text(
-                text = gateway.hash,
-                style = MaterialTheme.typography.labelSmall,
-                color = Color.Black,
-                textAlign = TextAlign.Center,
-                fontSize = 10.sp,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-        }
-    }
-}
 
 @Composable
 fun GatewayInfoRow(icon: ImageVector, text: String) {

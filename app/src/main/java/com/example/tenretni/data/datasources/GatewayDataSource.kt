@@ -33,8 +33,8 @@ class GatewayDataSource {
     }
 
 
-    fun installCustomerGateway(customerId: String?, gatewayInfo: String): String {
-        val url = "${customerId}/gateways"
+    fun installCustomerGateway(customerHref: String?, gatewayInfo: String): String {
+        val url = "${customerHref}/gateways"
 
         val (_, _, result) = url.httpPost().jsonBody(gatewayInfo).responseJson()
 

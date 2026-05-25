@@ -11,4 +11,6 @@ sealed interface TicketDetailsAction {
 }
 sealed interface TicketDetailsEvent {
     data class OnError(@field:StringRes val errorRes: Int) : TicketDetailsEvent
+
+    data class OnSuccess(val message: Int): TicketDetailsEvent
 }

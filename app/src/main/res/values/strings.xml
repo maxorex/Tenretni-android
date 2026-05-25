@@ -16,4 +16,5 @@
     <string name="missing_permission">Missing Permission</string>
     <string name="scan_the_id">Scan the id</string>
     <string name="error_while_refreshing_gateways">Error while refreshing gateways</string>
+    <string name="gateway_installed_successfully">Gateway installed successfully</string>
 </resources> 

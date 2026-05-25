@@ -94,6 +94,7 @@ class TicketDetailsViewModel : ViewModel() {
             }.collect {
                 val gatewayFromString = Json.decodeFromString<Gateway>(it)
                 AsyncResult.Success(gatewayFromString)
+                _events.send(TicketDetailsEvent.OnSuccess(R.string.gateway_installed_successfully))
                 Log.d("INSTALL", it)
             }
 
