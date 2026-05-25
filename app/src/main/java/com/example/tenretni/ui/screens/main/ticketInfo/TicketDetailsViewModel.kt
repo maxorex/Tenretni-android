@@ -1,5 +1,6 @@
 package com.example.tenretni.ui.screens.main.ticketInfo
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tenretni.R
@@ -8,7 +9,6 @@ import com.example.tenretni.core.Constants
 import com.example.tenretni.data.repositories.CustomerRepository
 import com.example.tenretni.data.repositories.GatewayRepository
 import com.example.tenretni.data.repositories.TicketRepository
-import com.example.tenretni.models.Customer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -61,16 +61,26 @@ class TicketDetailsViewModel : ViewModel() {
     }
 
 
-    private fun installGateway(rawQr: String?) {
+    private fun installGateway(customerHref: String?, rawQr: String?) {
         viewModelScope.launch {
             if (rawQr == null) {
                 _events.send(TicketDetailsEvent.OnError(R.string.qr_code_error))
                 return@launch
             }
 
-//            gatewayRepository.installCustomerGateway()
+            if(customerHref.isNullOrBlank()) {
+                viewModelScope.launch {
+                    _events.send(TicketDetailsEvent.OnError(R.string.error_while_creating_installing_the_new_gateway))
+                    return@launch
+                }
+            }
 
-//            val customerGateway =
+
+            gatewayRepository.installCustomerGateway(customerHref, rawQr).catch {
+                _events.send(TicketDetailsEvent.OnError(R.string.error_while_creating_installing_the_new_gateway))
+            }.collect {
+                Log.d("INSTALL", it)
+            }
 
 
 
@@ -87,7 +97,7 @@ class TicketDetailsViewModel : ViewModel() {
 
     fun onAction(action: TicketDetailsAction) {
         when (action) {
-            is TicketDetailsAction.Install -> installGateway(action.qrContent)
+            is TicketDetailsAction.Install -> installGateway(action.customerHref,action.qrContent)
             TicketDetailsAction.Refresh -> TODO()
         }
     }

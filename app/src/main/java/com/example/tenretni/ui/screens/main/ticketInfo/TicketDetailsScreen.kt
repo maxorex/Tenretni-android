@@ -52,6 +52,8 @@ import com.example.tenretni.R
 import com.example.tenretni.core.AsyncResult
 import com.example.tenretni.core.Constants
 import com.example.tenretni.core.extensions.ObserveAsEvents
+import com.example.tenretni.core.ui.components.ErrorMessage
+import com.example.tenretni.core.ui.components.LoadingAnimation
 import com.example.tenretni.models.Connection
 import com.example.tenretni.models.Customer
 import com.example.tenretni.models.Gateway
@@ -63,6 +65,8 @@ import com.example.tenretni.ui.screens.main.ticketsList.statusBackgroundColor
 import com.google.android.gms.maps.model.LatLng
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanCustomCode
+import io.github.g00fy2.quickie.config.BarcodeFormat
+import io.github.g00fy2.quickie.config.ScannerConfig
 
 @Composable
 fun TicketDetailsScreen(
@@ -84,8 +88,6 @@ fun TicketDetailsScreen(
                 event.errorRes,
                 Toast.LENGTH_LONG
             ).show()
-
-            TicketDetailsEvent.OnInstallSuccess -> TODO()
         }
     }
 
@@ -106,9 +108,17 @@ fun TicketDetailsScreen(
             }
 
             is QRResult.QRSuccess -> {
-                viewModel.onAction(TicketDetailsAction.Install(qrResult.content.rawValue))
+                viewModel.onAction(TicketDetailsAction.Install(ticket.customer.href,qrResult.content.rawValue))
             }
-            QRResult.QRUserCanceled -> TODO()
+            QRResult.QRUserCanceled -> {}
+        }
+    }
+
+    when(val installResult = uiState.installResult){
+        is AsyncResult.Error -> ErrorMessage(installResult.messageResId)
+        AsyncResult.Loading -> LoadingAnimation()
+        is AsyncResult.Success -> LaunchedEffect(installResult) {
+            Toast.makeText(context, "Gateway installed", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -159,6 +169,13 @@ fun TicketDetailsScreen(
         ) {
             // TODO: 5 et 6
             ActionButton(text = "Install", onClick = {
+                scanQrCodeLauncher.launch(
+                    ScannerConfig.build {
+                        setBarcodeFormats(listOf(BarcodeFormat.FORMAT_ALL_FORMATS))
+                        setOverlayStringRes(R.string.scan_the_id)
+                        setShowCloseButton(true)
+                    }
+                )
 
 //                ticket.status = status.copy()
 //
