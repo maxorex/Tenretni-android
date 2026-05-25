@@ -122,6 +122,9 @@ fun MainScreen(
                                     latLng.longitude.toFloat()
                                 )
                             )
+                        },
+                        onGatewayClick = { gateway ->
+                            uiState.topLevelBackStack.add(GatewayDetail(gateway))
                         }
                     )
                 }

@@ -7,11 +7,13 @@ import com.example.tenretni.core.AsyncResult
 import com.example.tenretni.core.Constants
 import com.example.tenretni.data.repositories.CustomerRepository
 import kotlinx.coroutines.Dispatchers
+import com.example.tenretni.data.repositories.GatewayRepository
+import com.example.tenretni.data.repositories.TicketRepository
+import com.example.tenretni.models.Gateway
 import kotlinx.coroutines.Job
+
 import kotlinx.coroutines.delay
 import com.example.tenretni.R
-import com.example.tenretni.data.repositories.TicketRepository
-import com.example.tenretni.data.repositories.GatewayRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +23,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 class TicketDetailsViewModel : ViewModel() {
 
@@ -43,19 +46,32 @@ class TicketDetailsViewModel : ViewModel() {
         refreshJob = viewModelScope.launch {
             while (isActive) {
                 customerRepository.retrieveAll()
-                    .flowOn(Dispatchers.IO)
-                    .catch { _ ->
-                        _uiState.update { it.copy(customerResult = AsyncResult.Error(R.string.error_message)) }
+                    .catch { ex ->
+                        _uiState.update { it.copy(customerResult = AsyncResult.Error(ex.hashCode())) }
                     }
                     .collect { customers ->
                         val customer = customers.find { it.href == customerHref }
                         if (customer != null) {
                             _uiState.update { it.copy(customerResult = AsyncResult.Success(customer)) }
                         } else {
-                            _uiState.update { it.copy(customerResult = AsyncResult.Error(R.string.error_message)) }
+                            _uiState.update { it.copy(customerResult = AsyncResult.Error(customer.hashCode())) }
                         }
                     }
                 delay(Constants.RefreshDelay.CUSTOMER_GATEWAY_REFRESH_DELAY)
+            }
+        }
+    }
+
+    fun refreshGateways(customerHref: String) {
+        viewModelScope.launch {
+            gatewayRepository.retrieveCustomerGateways(customerHref).catch {
+                _uiState.update {
+                    it.copy(customerGateways = AsyncResult.Error(R.string.error_while_refreshing_gateways))
+                }
+            }.collect { gateways ->
+                _uiState.update {
+                    it.copy(customerGateways = AsyncResult.Success(gateways))
+                }
             }
         }
     }
@@ -68,42 +84,60 @@ class TicketDetailsViewModel : ViewModel() {
                 return@launch
             }
 
-            if(customerHref.isNullOrBlank()) {
+            if (customerHref.isNullOrBlank()) {
                 viewModelScope.launch {
                     _events.send(TicketDetailsEvent.OnError(R.string.error_while_creating_installing_the_new_gateway))
                     return@launch
                 }
             }
 
-
             gatewayRepository.installCustomerGateway(customerHref, rawQr).catch {
                 _events.send(TicketDetailsEvent.OnError(R.string.error_while_creating_installing_the_new_gateway))
+                AsyncResult.Error(R.string.error_while_creating_installing_the_new_gateway)
             }.collect {
+                val gatewayFromString = Json.decodeFromString<Gateway>(it)
+                AsyncResult.Success(gatewayFromString)
+                _events.send(TicketDetailsEvent.OnSuccess(R.string.gateway_installed_successfully))
                 Log.d("INSTALL", it)
             }
         }
     }
 
-    fun updateTicketStatus(status: String, ticketId: String) {
-        viewModelScope.launch {
-            ticketRepository.updateStatus(ticketId, status)
-                .flowOn(Dispatchers.IO)
-                .catch { _ ->
-                    _uiState.update { it.copy(ticketResult = AsyncResult.Error(R.string.error_message)) }
+            fun updateTicketStatus(status: String, ticketId: String) {
+                viewModelScope.launch {
+                    ticketRepository.updateStatus(ticketId, status)
+                        .flowOn(Dispatchers.IO)
+                        .catch { _ ->
+                            _uiState.update { it.copy(ticketResult = AsyncResult.Error(R.string.error_message)) }
+                        }
+                        .collect { updatedTicket ->
+                            _uiState.update {
+                                it.copy(
+                                    ticketResult = AsyncResult.Success(
+                                        updatedTicket
+                                    )
+                                )
+                            }
+                        }
                 }
-                .collect { updatedTicket ->
-                    _uiState.update { it.copy(ticketResult = AsyncResult.Success(updatedTicket)) }
-                }
-        }
-    }
-
-    fun onAction(action: TicketDetailsAction) {
-        when (action) {
-            is TicketDetailsAction.Install -> installGateway(action.customerHref, action.qrContent)
-            is TicketDetailsAction.Update -> updateTicketStatus(action.status, action.ticketId)
-            TicketDetailsAction.Refresh -> {
-                // Manual refresh logic could go here if needed
             }
-        }
-    }
+
+
+            fun onAction(action: TicketDetailsAction) {
+                when (action) {
+                    is TicketDetailsAction.Update -> updateTicketStatus(
+                        action.status,
+                        action.ticketId
+                    )
+
+                    is TicketDetailsAction.Install -> installGateway(
+                        action.customerHref,
+                        action.qrContent
+                    )
+
+                    is TicketDetailsAction.Refresh -> refreshGateways(action.customerHref)
+                }
+            }
+
 }
+

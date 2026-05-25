@@ -21,4 +21,6 @@
     <string name="update">Update</string>
     <string name="reboot">reboot</string>
 
-</resources> 
+    <string name="error_while_refreshing_gateways">Error while refreshing gateways</string>
+    <string name="gateway_installed_successfully">Gateway installed successfully</string>
+</resources>

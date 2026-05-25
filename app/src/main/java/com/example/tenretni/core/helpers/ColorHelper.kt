@@ -27,7 +27,6 @@ object ColorHelper {
             Constants.ConnectionStatus.Online -> ConnectionStatusColor.Online
             Constants.ConnectionStatus.Offline -> ConnectionStatusColor.Offline
         }
-
     }
 
     fun ticketStatusColor(status: String): Color {

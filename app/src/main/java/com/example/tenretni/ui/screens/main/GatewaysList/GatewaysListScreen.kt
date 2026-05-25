@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,6 +37,9 @@ import com.example.tenretni.core.ui.components.ErrorMessage
 import com.example.tenretni.core.ui.components.LoadingAnimation
 import com.example.tenretni.models.Gateway
 import com.example.tenretni.ui.components.GatewayListCard
+import com.example.tenretni.ui.screens.main.ticketsList.SearchBar
+import com.example.tenretni.ui.screens.main.ticketsList.TicketsListAction
+import com.example.tenretni.ui.screens.main.ticketsList.TicketsListContent
 
 // TODO C: En tant qu’utilisateur, je souhaite procéder à la mise à jour de la borne
 // TODO C: En tant qu’utilisateur, je souhaite planifier un redémarrage de la borne
@@ -87,6 +91,24 @@ fun LandscapeMode(
     onAction: (GatewaysListAction) -> Unit,
     toGatewayDetailScreen: (Gateway) -> Unit
 ) {
+    Row(
+        modifier = Modifier.fillMaxSize().padding(horizontal = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            SearchBar(
+                searchText = uiState.searchText,
+                onSearch = { searchText -> onAction(GatewaysListAction.OnSearch(searchText)) }
+            )
+        }
+        Column(modifier = Modifier.weight(2f)) {
+            GatewaysListContent(
+                uiState = uiState,
+                onAction = onAction,
+                toGatewayDetailScreen = toGatewayDetailScreen,
+            )
+        }
+    }
 
 }
 
@@ -145,6 +167,7 @@ fun GatewaysListContent(
 
                 AsyncResult.Loading -> LoadingAnimation()
                 is AsyncResult.Success -> {
+
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(2),
                             modifier = Modifier.fillMaxSize(),
@@ -161,7 +184,6 @@ fun GatewaysListContent(
                                 )
                             }
                         }
-
                 }
             }
         }
