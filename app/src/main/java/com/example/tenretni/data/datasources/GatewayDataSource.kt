@@ -21,16 +21,14 @@ class GatewayDataSource {
         }
     }
 
-    fun installCustomerGateway(customerId: String, gateway: Gateway): Gateway {
-        val url = "${Constants.BaseURL.CUSTOMER}/${customerId}/gateways"
+    fun installCustomerGateway(customerId: String?, gatewayInfo: String): String {
+        val url = "${customerId}/gateways"
 
-        val body = json.encodeToString(gateway)
-
-        val (_, _, result) = url.httpPost().jsonBody(body).responseJson()
+        val (_, _, result) = url.httpPost().jsonBody(gatewayInfo).responseJson()
 
         return when (result) {
             is Result.Failure -> throw result.getException().exception
-            is Result.Success -> json.decodeFromString(result.value.content)
+            is Result.Success -> (result.value.content)
         }
     }
 }
