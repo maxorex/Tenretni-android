@@ -2,6 +2,7 @@ package com.example.tenretni.data.datasources
 
 import com.example.tenretni.core.Constants
 import com.example.tenretni.models.Ticket
+import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.json.responseJson
@@ -22,8 +23,8 @@ class TicketDataSource {
     }
 
     fun updateStatus(ticketId: String, status: String): Ticket {
-        val (_, _, result) = "${Constants.BaseURL.TICKETS}/$ticketId/actions"
-            .httpPost(listOf("type" to status)).responseJson()
+        val (_, _, result) = "${ticketId}/actions?type=${status}"
+            .httpPost().responseJson()
 
         return when(result) {
             is Result.Failure -> throw result.error

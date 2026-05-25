@@ -78,8 +78,14 @@ fun TicketDetailsScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
-    LaunchedEffect(ticket.customer.href) {
-        viewModel.startRefreshing(ticket.customer.href)
+    val currentTicket =
+        when (val result = uiState.ticketResult) {
+        is AsyncResult.Success -> result.data
+        else -> ticket
+    }
+
+    LaunchedEffect(currentTicket.customer.href) {
+        viewModel.startRefreshing(currentTicket.customer.href)
     }
 
     ObserveAsEvents(viewModel.events) { event ->
@@ -133,7 +139,7 @@ fun TicketDetailsScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
-        TicketCard(ticket)
+        TicketCard(currentTicket)
 
         // Customer Info Section
         val customerResult = uiState.customerResult
@@ -144,8 +150,8 @@ fun TicketDetailsScreen(
                 }
             })
         } else {
-            CustomerSection(customer = ticket.customer, onLocationClick = {
-                ticket.customer.coord?.let {
+            CustomerSection(customer = currentTicket.customer, onLocationClick = {
+                currentTicket.customer.coord?.let {
                     toMapScreen(LatLng(it.latitude.toDouble(), it.longitude.toDouble()))
                 }
             })
@@ -155,7 +161,7 @@ fun TicketDetailsScreen(
         val gateways = if (customerResult is AsyncResult.Success) {
             customerResult.data.gateways
         } else {
-            ticket.customer.gateways
+            currentTicket.customer.gateways
         }
         GatewaySection(gateways = gateways)
 
@@ -179,13 +185,13 @@ fun TicketDetailsScreen(
                 )
 
             })
-            if (ticket.status == "Open") {
+            if (currentTicket.status == "Open") {
                 ActionButton(text = "Solve", onClick = {
-                    viewModel.onAction(TicketDetailsAction.Update("Solve", ticket.ticketNumber))
+                    viewModel.onAction(TicketDetailsAction.Update("solve", currentTicket.href))
                 })
             } else {
                 ActionButton(text = "Open", onClick = {
-                    viewModel.onAction(TicketDetailsAction.Update("Open", ticket.ticketNumber))
+                    viewModel.onAction(TicketDetailsAction.Update("open", currentTicket.href))
                 })
             }
         }
