@@ -28,9 +28,17 @@ class GatewayRepository(
         }
     }
 
-    fun installCustomerGateway(customerId: String?, gatewayInfo: String): Flow<String> {
+    fun retrieveCustomerGateways(customerHref: String): Flow<List<Gateway>> {
         return flow {
-            emit(gatewayDataSource.installCustomerGateway(customerId, gatewayInfo))
+            emit(gatewayDataSource.retrieveCustomerGateways(customerHref))
+        }.catch { ex ->
+            throw ex
+        }.flowOn(Dispatchers.IO)
+    }
+
+    fun installCustomerGateway(customerHref: String?, gatewayInfo: String): Flow<String> {
+        return flow {
+            emit(gatewayDataSource.installCustomerGateway(customerHref, gatewayInfo))
         }.catch { ex ->
             throw ex
         }.flowOn(Dispatchers.IO)

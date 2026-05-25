@@ -21,8 +21,20 @@ class GatewayDataSource {
         }
     }
 
-    fun installCustomerGateway(customerId: String?, gatewayInfo: String): String {
+    fun retrieveCustomerGateways(customerId: String): List<Gateway> {
         val url = "${customerId}/gateways"
+
+        val (_, _, result) = url.httpGet().responseJson()
+
+        return when (result) {
+            is Result.Failure -> throw result.getException().exception
+            is Result.Success -> json.decodeFromString(result.value.content)
+        }
+    }
+
+
+    fun installCustomerGateway(customerHref: String?, gatewayInfo: String): String {
+        val url = "${customerHref}/gateways"
 
         val (_, _, result) = url.httpPost().jsonBody(gatewayInfo).responseJson()
 
