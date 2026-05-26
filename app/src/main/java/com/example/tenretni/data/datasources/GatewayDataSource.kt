@@ -43,4 +43,14 @@ class GatewayDataSource {
             is Result.Success -> (result.value.content)
         }
     }
+
+    fun updateGateway(gatewayHref: String): Gateway {
+        val (_, _, result) = "${gatewayHref}/actions?type=update"
+            .httpPost().responseJson()
+
+        return when (result) {
+            is Result.Failure -> throw result.error
+            is Result.Success -> json.decodeFromString(result.value.content)
+        }
+    }
 }

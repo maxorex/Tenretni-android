@@ -43,4 +43,12 @@ class GatewayRepository(
             throw ex
         }.flowOn(Dispatchers.IO)
     }
+
+    fun updateGateway(gatewayHref: String): Flow<Gateway> {
+        return flow {
+            emit(gatewayDataSource.updateGateway(gatewayHref))
+        }.catch { ex ->
+            throw ex
+        }.flowOn(Dispatchers.IO)
+    }
 }

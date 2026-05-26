@@ -52,18 +52,21 @@ fun GatewayInfoScreen(
 
     if (orientation == Configuration.ORIENTATION_PORTRAIT) {
         PortraitMode(
-            gateway = gateway
+            gateway = gateway,
+            onUpdate = { viewModel.updateGateway(gateway.href) }
         )
     } else {
         LandscapeMode(
-            gateway = gateway
+            gateway = gateway,
+            onUpdate = { viewModel.updateGateway(gateway.href) }
         )
     }
 }
 
 @Composable
 private fun PortraitMode(
-    gateway: Gateway
+    gateway: Gateway,
+    onUpdate: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -92,14 +95,15 @@ private fun PortraitMode(
         Spacer(modifier = Modifier.height(24.dp))
 
         // Action Buttons
-        Buttons()
+        Buttons(gateway, onUpdate)
     }
 }
 
 
 @Composable
 private fun LandscapeMode(
-    gateway: Gateway
+    gateway: Gateway,
+    onUpdate: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -127,7 +131,7 @@ private fun LandscapeMode(
                 StatsCard(gateway)
             }
         }
-        Buttons()
+        Buttons(gateway, onUpdate)
     }
 }
 
@@ -298,7 +302,8 @@ private fun ColorBar(hash: String) {
 
 @Composable
 private fun Buttons(
-
+    gateway: Gateway,
+    onUpdate: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -306,15 +311,17 @@ private fun Buttons(
             .padding(horizontal = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Button(
-            onClick = { /* TODO */ },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF006064)),
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = 8.dp),
-            shape = RoundedCornerShape(24.dp)
-        ) {
-            Text(stringResource(R.string.update), color = Color.White)
+        if (gateway.connection.status == "Online") {
+            Button(
+                onClick = onUpdate,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF006064)),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                shape = RoundedCornerShape(24.dp)
+            ) {
+                Text(stringResource(R.string.update), color = Color.White)
+            }
         }
         Button(
             onClick = { /* TODO */ },
