@@ -61,6 +61,7 @@ import com.example.tenretni.core.extensions.OnResume
 import com.example.tenretni.core.helpers.ColorHelper
 import com.example.tenretni.core.ui.components.ErrorMessage
 import com.example.tenretni.core.ui.components.LoadingAnimation
+import com.example.tenretni.core.ui.navigation.TopBarOptions
 import com.example.tenretni.models.Connection
 import com.example.tenretni.models.Customer
 import com.example.tenretni.models.Gateway
@@ -80,10 +81,22 @@ fun TicketDetailsScreen(
     ticket: Ticket,
     viewModel: TicketDetailsViewModel = viewModel(),
     toMapScreen: (LatLng) -> Unit,
-    onGatewayClick: (Gateway) -> Unit
+    onGatewayClick: (Gateway) -> Unit,
+    onUpdateTopBar: (TopBarOptions) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        onUpdateTopBar(
+            TopBarOptions(
+                isTopBarVisible = true,
+                isBackButtonVisible = true,
+                titleStringRes = R.string.ticket,
+                titleArgs = listOf(ticket.ticketNumber)
+            )
+        )
+    }
 
     OnResume {
         viewModel.onAction(TicketDetailsAction.Refresh(ticket.customer.href))

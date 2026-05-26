@@ -125,7 +125,8 @@ fun MainScreen(
                         },
                         onGatewayClick = { gateway ->
                             uiState.topLevelBackStack.add(GatewayDetail(gateway))
-                        }
+                        },
+                        onUpdateTopBar = { options -> viewModel.onAction(MainAction.UpdateTopBarOptions(options)) }
                     )
                 }
                 entry<MapRoute> { coord ->
