@@ -45,13 +45,12 @@ fun NetworkScreen(
     ) {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        // TODO C: Rendre plus grand
         // Logo
         Image(
             painter = painterResource(id = R.drawable.tenretni),
             contentDescription = "Tenretni Logo",
             modifier = Modifier
-                .height(100.dp)
+                .size(200.dp)
                 .padding(bottom = 16.dp)
         )
 
