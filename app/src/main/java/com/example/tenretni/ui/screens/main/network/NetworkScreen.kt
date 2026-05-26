@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,12 +58,12 @@ fun NetworkScreen(
         // TODO C: vérifier pour bon format
         // Reboot and Update Info
         Text(
-            text = "Next reboot at: ${uiState.network?.nextReboot ?: "Loading..."}",
+            text = stringResource(R.string.next_reboot_at, uiState.network?.nextReboot ?: stringResource(R.string.loading)),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "Last update: ${uiState.network?.updateDate ?: "Loading..."}",
+            text = stringResource(R.string.last_update, uiState.network?.updateDate ?: stringResource(R.string.loading)),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )

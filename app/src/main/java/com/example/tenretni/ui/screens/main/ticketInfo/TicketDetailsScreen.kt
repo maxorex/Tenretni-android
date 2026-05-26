@@ -209,7 +209,7 @@ fun TicketDetailsScreen(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             // TODO: 5 et 6
-            ActionButton(text = "Install", onClick = {
+            ActionButton(text = stringResource(R.string.install), onClick = {
                 scanQrCodeLauncher.launch(
                     ScannerConfig.build {
                         setBarcodeFormats(listOf(BarcodeFormat.FORMAT_ALL_FORMATS))
@@ -220,11 +220,11 @@ fun TicketDetailsScreen(
 
             })
             if (currentTicket.status == "Open") {
-                ActionButton(text = "Solve", onClick = {
+                ActionButton(text = stringResource(R.string.solve), onClick = {
                     viewModel.onAction(TicketDetailsAction.Update("solve", currentTicket.href))
                 })
             } else {
-                ActionButton(text = "Open", onClick = {
+                ActionButton(text = stringResource(R.string.open), onClick = {
                     viewModel.onAction(TicketDetailsAction.Update("open", currentTicket.href))
                 })
             }
@@ -318,7 +318,7 @@ fun CustomerSection(customer: Customer, onLocationClick: () -> Unit) {
 
                 AsyncImage(
                     model = Constants.FLAG_API_URL.format(customer.country.lowercase()),
-                    contentDescription = "Country Flag",
+                    contentDescription = stringResource(R.string.country_flag),
                     modifier = Modifier
                         .width(60.dp)
                         .height(40.dp)

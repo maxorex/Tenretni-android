@@ -70,11 +70,21 @@ fun TicketCard(
                 horizontalAlignment = Alignment.End
             ) {
                 TicketBadge(
-                    text = ticket.priority,
+                    text = when(ticket.priority) {
+                        "Low" -> stringResource(R.string.priority_low)
+                        "Normal" -> stringResource(R.string.priority_normal)
+                        "High" -> stringResource(R.string.priority_high)
+                        "Critical" -> stringResource(R.string.priority_critical)
+                        else -> ticket.priority
+                    },
                     backgroundColor = ColorHelper.ticketPriorityColor(ticket.priority)
                 )
                 TicketBadge(
-                    text = ticket.status,
+                    text = when(ticket.status) {
+                        "Open" -> stringResource(R.string.status_open)
+                        "Solved" -> stringResource(R.string.status_solved)
+                        else -> ticket.status
+                    },
                     backgroundColor = ColorHelper.ticketStatusColor(ticket.status)
                 )
             }

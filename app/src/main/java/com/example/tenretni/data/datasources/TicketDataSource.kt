@@ -22,6 +22,7 @@ class TicketDataSource {
         }
     }
 
+
     fun updateStatus(ticketId: String, status: String): Ticket {
         val (_, _, result) = "${ticketId}/actions?type=${status}"
             .httpPost().responseJson()
@@ -31,5 +32,4 @@ class TicketDataSource {
             is Result.Success -> json.decodeFromString(result.value.content)
         }
     }
-
 }

@@ -28,8 +28,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tenretni.R
+import com.example.tenretni.core.helpers.ColorHelper
 import com.example.tenretni.models.Gateway
-import com.example.tenretni.ui.screens.main.GatewaysList.statusColors
+
 
 @Composable
 fun GatewayListCard(
@@ -47,21 +48,25 @@ fun GatewayListCard(
             modifier = Modifier.padding(10.dp).fillMaxWidth()
         ) {
             GatewayListStatus(
-                text = gateway.connection.status,
-                backgroundColor = gateway.statusColors
+                text = when(gateway.connection.status) {
+                    "Online" -> stringResource(R.string.status_online)
+                    "Offline" -> stringResource(R.string.status_offline)
+                    else -> gateway.connection.status
+                },
+                backgroundColor = ColorHelper.connectionStatusColor(gateway.connection.status)
             )
             if (gateway.connection.status == "Offline") {
                 Text(text = stringResource(R.string.n_a))
                 Text(text = gateway.serialNumber)
             } else {
-                Row() {
+                Row {
                     Icon(
                         imageVector = Icons.Default.SwapHoriz,
                         contentDescription = Icons.Default.SwapHoriz.toString()
                     )
                     Text(text = gateway.connection.ping.toString()+" ns")
                 }
-                Row() {
+                Row {
                     Icon(
                         imageVector = Icons.Default.CloudDownload,
                         contentDescription = Icons.Default.CloudDownload.toString()

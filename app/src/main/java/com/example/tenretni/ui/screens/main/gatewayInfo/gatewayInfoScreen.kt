@@ -141,7 +141,11 @@ private fun Info(
         shape = RoundedCornerShape(16.dp)
     ) {
         Text(
-            text = gateway.connection.status,
+            text = when(gateway.connection.status) {
+                "Online" -> stringResource(R.string.status_online)
+                "Offline" -> stringResource(R.string.status_offline)
+                else -> gateway.connection.status
+            },
             color = Color.White,
             modifier = Modifier.padding(horizontal = 48.dp, vertical = 6.dp),
             fontWeight = FontWeight.Bold,
@@ -253,7 +257,7 @@ private fun StatsCard(
             }
         } else {
             Text(
-                text = "N/A",
+                text = stringResource(R.string.n_a),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -272,15 +276,12 @@ private fun ColorBar(hash: String) {
         .drop(2)
         .dropLast(2)
         .chunked(6)
-
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Text(start)
 
         colors.forEach { colorHex ->
-
             Box(
                 modifier = Modifier
                     .size(20.dp)
@@ -291,14 +292,12 @@ private fun ColorBar(hash: String) {
                     )
             )
         }
-
         Text(end)
     }
 }
 
 @Composable
 private fun Buttons(
-
 ) {
     Row(
         modifier = Modifier

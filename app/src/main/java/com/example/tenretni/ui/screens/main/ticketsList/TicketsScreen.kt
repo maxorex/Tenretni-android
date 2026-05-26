@@ -87,16 +87,15 @@ private fun LandscapeMode(
     toTicketDetailScreen: (Ticket) -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = Modifier.fillMaxSize(),
     ) {
-        Column() {
+        Column {
             SearchBar(
                 searchText = uiState.searchText,
                 onSearch = { searchText -> onAction(TicketsListAction.OnSearch(searchText)) }
             )
         }
-        Column() {
+        Column {
             TicketsListContent(
                 uiState = uiState,
                 onAction = onAction,
