@@ -29,6 +29,8 @@
     <string name="status_solved">Solved</string>
     <string name="status_online">Online</string>
     <string name="status_offline">Offline</string>
+    <string name="gateway">Gateway</string>
+    <string name="gateway_title">Gateway %s</string>
     <string name="error_while_refreshing_gateways">Error while refreshing gateways</string>
     <string name="priority_low">Low</string>
     <string name="priority_normal">Normal</string>

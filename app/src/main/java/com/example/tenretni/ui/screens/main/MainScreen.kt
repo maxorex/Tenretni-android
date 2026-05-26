@@ -142,7 +142,10 @@ fun MainScreen(
                     })
                 }
                 entry<GatewayDetail> { gatewayDetail ->
-                    GatewayInfoScreen(gateway = gatewayDetail.gateway)
+                    GatewayInfoScreen(
+                        gateway = gatewayDetail.gateway,
+                        onUpdateTopBar = { options -> viewModel.onAction(MainAction.UpdateTopBarOptions(options)) }
+                    )
                 }
                 entry<Network> {
                     NetworkScreen()

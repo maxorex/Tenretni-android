@@ -35,6 +35,8 @@
     <string name="reboot">Redémarrer</string>
     <string name="solve">Résoudre</string>
     <string name="install">Installer</string>
+    <string name="gateway">Borne</string>
+    <string name="gateway_title">Borne %s</string>
     <string name="ticket">Billet %s</string>
     <string name="country_flag">Drapeau du pays</string>
 </resources>
