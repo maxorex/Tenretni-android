@@ -66,6 +66,7 @@ import com.example.tenretni.models.Connection
 import com.example.tenretni.models.Customer
 import com.example.tenretni.models.Gateway
 import com.example.tenretni.models.Ticket
+import com.example.tenretni.ui.components.CustomerCard
 import com.example.tenretni.ui.components.GatewayListCard
 import com.example.tenretni.ui.components.TicketBadge
 import com.example.tenretni.ui.components.TicketCard
@@ -172,13 +173,13 @@ fun TicketDetailsScreen(
         // Customer Info Section
         val customerResult = uiState.customerResult
         if (customerResult is AsyncResult.Success) {
-            CustomerSection(customer = customerResult.data, onLocationClick = {
+            CustomerCard(customer = customerResult.data, onLocationClick = {
                 customerResult.data.coord?.let {
                     toMapScreen(LatLng(it.latitude.toDouble(), it.longitude.toDouble()))
                 }
             })
         } else {
-            CustomerSection(customer = currentTicket.customer, onLocationClick = {
+            CustomerCard(customer = currentTicket.customer, onLocationClick = {
                 currentTicket.customer.coord?.let {
                     toMapScreen(LatLng(it.latitude.toDouble(), it.longitude.toDouble()))
                 }
@@ -221,7 +222,6 @@ fun TicketDetailsScreen(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            // TODO: 5 et 6
             ActionButton(text = stringResource(R.string.install), onClick = {
                 scanQrCodeLauncher.launch(
                     ScannerConfig.build {
@@ -245,128 +245,6 @@ fun TicketDetailsScreen(
     }
 }
 
-@Composable
-fun TicketHeader(ticket: Ticket) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    text = "Ticket ${ticket.ticketNumber}",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = ticket.createdDate,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
-                )
-            }
-            Column(
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                TicketBadge(
-                    text = ticket.priority,
-                    backgroundColor = ColorHelper.ticketPriorityColor(ticket.priority)
-                )
-                TicketBadge(text = ticket.status,
-                    backgroundColor = ColorHelper.ticketStatusColor(ticket.status)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun CustomerSection(customer: Customer, onLocationClick: () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                Text(
-                    text = "${customer.firstName} ${customer.lastName}",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = customer.email,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
-                )
-                Text(
-                    text = customer.address,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = customer.city,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                AsyncImage(
-                    model = Constants.FLAG_API_URL.format(customer.country.lowercase()),
-                    contentDescription = stringResource(R.string.country_flag),
-                    modifier = Modifier
-                        .width(60.dp)
-                        .height(40.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                )
-            }
-
-            LocationButton(onLocationClick)
-        }
-    }
-}
-
-
-@Composable
-fun GatewayInfoRow(icon: ImageVector, text: String) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            modifier = Modifier.size(20.dp),
-            tint = Color.Black
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
-    }
-}
 
 @Composable
 fun ActionButton(text: String, onClick: () -> Unit) {
@@ -434,20 +312,5 @@ fun TicketDetailsScreenPreview() {
     )
     MaterialTheme {
         TicketDetailsScreen(ticket = dummyTicket, toMapScreen = {}, onGatewayClick = {})
-    }
-}
-
-@Composable
-fun LocationButton(toMapScreen: () -> Unit) {
-    Button(
-        onClick = toMapScreen,
-        shape = RoundedCornerShape(12.dp),
-        contentPadding = PaddingValues(0.dp),
-        modifier = Modifier.size(48.dp),
-    ) {
-        Icon(
-            imageVector = Icons.Default.MyLocation,
-            contentDescription = stringResource(R.string.my_location)
-        )
     }
 }
