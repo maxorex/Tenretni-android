@@ -9,11 +9,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -38,8 +36,6 @@ import com.example.tenretni.core.ui.components.LoadingAnimation
 import com.example.tenretni.models.Gateway
 import com.example.tenretni.ui.components.GatewayListCard
 import com.example.tenretni.ui.screens.main.ticketsList.SearchBar
-import com.example.tenretni.ui.screens.main.ticketsList.TicketsListAction
-import com.example.tenretni.ui.screens.main.ticketsList.TicketsListContent
 
 @Composable
 fun GatewaysListScreen(

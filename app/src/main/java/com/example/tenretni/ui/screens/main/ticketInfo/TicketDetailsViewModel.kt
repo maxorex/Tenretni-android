@@ -3,18 +3,17 @@ package com.example.tenretni.ui.screens.main.ticketInfo
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tenretni.R
 import com.example.tenretni.core.AsyncResult
 import com.example.tenretni.core.Constants
 import com.example.tenretni.data.repositories.CustomerRepository
-import kotlinx.coroutines.Dispatchers
 import com.example.tenretni.data.repositories.GatewayRepository
 import com.example.tenretni.data.repositories.TicketRepository
 import com.example.tenretni.models.Gateway
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-
-import kotlinx.coroutines.delay
-import com.example.tenretni.R
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch

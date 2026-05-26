@@ -3,10 +3,10 @@ package com.example.tenretni.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import com.example.tenretni.core.ui.navigation.BottomNavItem
-import com.example.tenretni.core.ui.navigation.Screen
 import com.example.tenretni.R
 import com.example.tenretni.core.ui.navigation.BottomBarOptions
+import com.example.tenretni.core.ui.navigation.BottomNavItem
+import com.example.tenretni.core.ui.navigation.Screen
 import com.example.tenretni.core.ui.navigation.TopBarOptions
 import com.example.tenretni.models.Gateway
 import com.example.tenretni.models.Ticket

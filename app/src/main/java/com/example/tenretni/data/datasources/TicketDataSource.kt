@@ -2,7 +2,6 @@ package com.example.tenretni.data.datasources
 
 import com.example.tenretni.core.Constants
 import com.example.tenretni.models.Ticket
-import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.json.responseJson

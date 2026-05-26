@@ -1,7 +1,5 @@
 package com.example.tenretni.ui.screens.main.GatewaysList
 
-import com.example.tenretni.models.Gateway
-
 
 sealed interface GatewaysListAction {
     data object RefreshGateways : GatewaysListAction

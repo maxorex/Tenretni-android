@@ -1,6 +1,5 @@
 package com.example.tenretni.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,7 +35,6 @@ import com.example.tenretni.R
 import com.example.tenretni.core.helpers.ColorHelper
 import com.example.tenretni.models.Node
 import com.example.tenretni.ui.theme.CardColor
-import com.example.tenretni.ui.theme.ConnectionStatusColor
 
 @Composable
 fun NodeCard(

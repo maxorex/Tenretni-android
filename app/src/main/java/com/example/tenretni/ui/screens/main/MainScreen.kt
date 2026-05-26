@@ -8,7 +8,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,7 +35,6 @@ import com.example.tenretni.ui.screens.main.map.MapScreen
 import com.example.tenretni.ui.screens.main.network.NetworkScreen
 import com.example.tenretni.ui.screens.main.ticketInfo.TicketDetailsScreen
 import com.example.tenretni.ui.screens.main.ticketsList.TicketsScreen
-import com.example.tenretni.R
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 

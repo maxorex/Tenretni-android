@@ -2,7 +2,6 @@ package com.example.tenretni.ui.screens.main.ticketsList
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -36,8 +34,6 @@ import com.example.tenretni.core.ui.components.ErrorMessage
 import com.example.tenretni.core.ui.components.LoadingAnimation
 import com.example.tenretni.models.Ticket
 import com.example.tenretni.ui.components.TicketCard
-import com.example.tenretni.ui.screens.main.GatewaysList.GatewaysListAction
-import com.example.tenretni.ui.screens.main.GatewaysList.GatewaysListContent
 
 @Composable
 fun TicketsScreen(
