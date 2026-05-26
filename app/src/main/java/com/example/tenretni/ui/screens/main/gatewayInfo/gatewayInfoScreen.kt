@@ -30,19 +30,43 @@ import com.example.tenretni.R
 import com.example.tenretni.core.AsyncResult
 import com.example.tenretni.core.extensions.painterResourceFromString
 import com.example.tenretni.core.helpers.ColorHelper
+import com.example.tenretni.core.ui.navigation.TopBarOptions
 import com.example.tenretni.models.Gateway
 import com.example.tenretni.ui.components.DetailRow
 
 @Composable
 fun GatewayInfoScreen(
     viewModel: GatewayInfoViewModel = viewModel(),
-    gateway: Gateway
+    gateway: Gateway,
+    onUpdateTopBar: (TopBarOptions) -> Unit = {}
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val orientation = LocalConfiguration.current.orientation
 
     LaunchedEffect(gateway.serialNumber) {
         viewModel.refreshGateway(gateway.serialNumber)
+    }
+
+    LaunchedEffect(orientation) {
+        val titleStringRes = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            R.string.gateway_title
+        } else {
+            R.string.gateway
+        }
+        val titleArgs = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            listOf(gateway.serialNumber)
+        } else {
+            emptyList()
+        }
+
+        onUpdateTopBar(
+            TopBarOptions(
+                isTopBarVisible = true,
+                isBackButtonVisible = true,
+                titleStringRes = titleStringRes,
+                titleArgs = titleArgs
+            )
+        )
     }
 
     val gateway = when (val result = uiState.gatewayResult) {

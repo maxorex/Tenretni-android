@@ -20,6 +20,8 @@
     <string name="online">online</string>
     <string name="update">Update</string>
     <string name="reboot">reboot</string>
+    <string name="gateway">Gateway</string>
+    <string name="gateway_title">Gateway %s</string>
 
     <string name="error_while_refreshing_gateways">Error while refreshing gateways</string>
     <string name="gateway_installed_successfully">Gateway installed successfully</string>
