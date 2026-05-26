@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tenretni.R
+import com.example.tenretni.core.helpers.DateHelper
 import com.example.tenretni.ui.components.NodeCard
 import com.example.tenretni.ui.components.NodeDetailsCard
 
@@ -52,14 +53,22 @@ fun NetworkScreen(
                 .padding(bottom = 16.dp)
         )
 
+        val nextReboot = uiState.network?.nextReboot?.let {
+            try { DateHelper.formatUTCToSystemDefault(it) } catch (_: Exception) { it }
+        } ?: stringResource(R.string.loading)
+
+        val lastUpdate = uiState.network?.updateDate?.let {
+            try { DateHelper.formatUTCToSystemDefault(it) } catch (_: Exception) { it }
+        } ?: stringResource(R.string.loading)
+
         // Reboot and Update Info
         Text(
-            text = stringResource(R.string.next_reboot_at, uiState.network?.nextReboot ?: stringResource(R.string.loading)),
+            text = stringResource(R.string.next_reboot_at, nextReboot),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = stringResource(R.string.last_update, uiState.network?.updateDate ?: stringResource(R.string.loading)),
+            text = stringResource(R.string.last_update, lastUpdate),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )
