@@ -36,6 +36,8 @@ import com.example.tenretni.core.ui.components.ErrorMessage
 import com.example.tenretni.core.ui.components.LoadingAnimation
 import com.example.tenretni.models.Ticket
 import com.example.tenretni.ui.components.TicketCard
+import com.example.tenretni.ui.screens.main.GatewaysList.GatewaysListAction
+import com.example.tenretni.ui.screens.main.GatewaysList.GatewaysListContent
 
 @Composable
 fun TicketsScreen(
@@ -87,20 +89,28 @@ private fun LandscapeMode(
     toTicketDetailScreen: (Ticket) -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Column {
-            SearchBar(
-                searchText = uiState.searchText,
-                onSearch = { searchText -> onAction(TicketsListAction.OnSearch(searchText)) }
-            )
-        }
-        Column {
-            TicketsListContent(
-                uiState = uiState,
-                onAction = onAction,
-                toTicketDetailScreen = toTicketDetailScreen,
-            )
+        Row(
+            modifier = Modifier.fillMaxSize().padding(horizontal = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                SearchBar(
+                    searchText = uiState.searchText,
+                    onSearch = { searchText -> onAction(TicketsListAction.OnSearch(searchText)) }
+                )
+            }
+            Column(modifier = Modifier.weight(2f)) {
+                TicketsListContent(
+                    uiState = uiState,
+                    onAction = onAction,
+                    toTicketDetailScreen = toTicketDetailScreen,
+                )
+            }
         }
     }
 }
