@@ -82,4 +82,24 @@ class GatewayInfoViewModel: ViewModel() {
             }
         }
     }
+
+    fun rebootGateway(gatewayHref: String) {
+        viewModelScope.launch {
+            gatewayRepository.rebootGateway(gatewayHref).catch {
+                _uiState.update {
+                    it.copy(
+                        gatewayResult = AsyncResult.Error(R.string.error_message),
+                        isRefreshing = false
+                    )
+                }
+            }.collect { gateway ->
+                _uiState.update {
+                    it.copy(
+                        gatewayResult = AsyncResult.Success(gateway),
+                        isRefreshing = false
+                    )
+                }
+            }
+        }
+    }
 }

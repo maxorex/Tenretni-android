@@ -53,4 +53,14 @@ class GatewayDataSource {
             is Result.Success -> json.decodeFromString(result.value.content)
         }
     }
+
+    fun rebootGateway(gatewayHref: String): Gateway {
+        val (_, _, result) = "${gatewayHref}/actions?type=reboot"
+            .httpPost().responseJson()
+
+        return when (result) {
+            is Result.Failure -> throw result.error
+            is Result.Success -> json.decodeFromString(result.value.content)
+        }
+    }
 }

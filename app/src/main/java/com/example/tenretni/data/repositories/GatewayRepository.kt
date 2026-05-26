@@ -51,4 +51,12 @@ class GatewayRepository(
             throw ex
         }.flowOn(Dispatchers.IO)
     }
+
+    fun rebootGateway(gatewayHref: String): Flow<Gateway> {
+        return flow {
+            emit(gatewayDataSource.rebootGateway(gatewayHref))
+        }.catch { ex ->
+            throw ex
+        }.flowOn(Dispatchers.IO)
+    }
 }

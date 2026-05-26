@@ -76,12 +76,14 @@ fun GatewayInfoScreen(
     if (orientation == Configuration.ORIENTATION_PORTRAIT) {
         PortraitMode(
             gateway = gateway,
-            onUpdate = { viewModel.updateGateway(gateway.href) }
+            onUpdate = { viewModel.updateGateway(gateway.href) },
+            onReboot = { viewModel.rebootGateway(gateway.href) }
         )
     } else {
         LandscapeMode(
             gateway = gateway,
-            onUpdate = { viewModel.updateGateway(gateway.href) }
+            onUpdate = { viewModel.updateGateway(gateway.href) },
+            onReboot = { viewModel.rebootGateway(gateway.href) }
         )
     }
 }
@@ -89,7 +91,8 @@ fun GatewayInfoScreen(
 @Composable
 private fun PortraitMode(
     gateway: Gateway,
-    onUpdate: () -> Unit
+    onUpdate: () -> Unit,
+    onReboot: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -118,7 +121,7 @@ private fun PortraitMode(
         Spacer(modifier = Modifier.height(24.dp))
 
         // Action Buttons
-        Buttons(gateway, onUpdate)
+        Buttons(gateway, onUpdate, onReboot)
     }
 }
 
@@ -126,7 +129,8 @@ private fun PortraitMode(
 @Composable
 private fun LandscapeMode(
     gateway: Gateway,
-    onUpdate: () -> Unit
+    onUpdate: () -> Unit,
+    onReboot: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -155,7 +159,7 @@ private fun LandscapeMode(
                 StatsCard(gateway)
             }
         }
-        Buttons(gateway, onUpdate)
+        Buttons(gateway, onUpdate, onReboot)
     }
 }
 
@@ -327,7 +331,8 @@ private fun ColorBar(hash: String) {
 @Composable
 private fun Buttons(
     gateway: Gateway,
-    onUpdate: () -> Unit
+    onUpdate: () -> Unit,
+    onReboot: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -346,16 +351,16 @@ private fun Buttons(
             ) {
                 Text(stringResource(R.string.update), color = Color.White)
             }
-        }
-        Button(
-            onClick = { /* TODO */ },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF006064)),
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = 8.dp),
-            shape = RoundedCornerShape(24.dp)
-        ) {
-            Text(stringResource(R.string.reboot), color = Color.White)
+            Button(
+                onClick = onReboot,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF006064)),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp),
+                shape = RoundedCornerShape(24.dp)
+            ) {
+                Text(stringResource(R.string.reboot), color = Color.White)
+            }
         }
     }
 }
