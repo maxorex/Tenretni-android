@@ -38,8 +38,6 @@ import com.example.tenretni.models.Node
 import com.example.tenretni.ui.theme.CardColor
 import com.example.tenretni.ui.theme.ConnectionStatusColor
 
-// TODO C: A vérifier + rendre plus clean
-// TODO C: Fix toute les couleur
 @Composable
 fun NodeCard(
     node: Node,
@@ -76,7 +74,6 @@ fun NodeCard(
                 )
             }
             Surface(
-                // TODO C: Utiliser les couleur et le texte traduit
                 color = ColorHelper.connectionStatusColor(node.connection.status),
                 shape = RoundedCornerShape(12.dp)
             ) {
@@ -98,7 +95,6 @@ fun NodeCard(
 
 @Composable
 fun NodeDetailsCard(node: Node){
-    // TODO C: Utiliser la node sélectionner
     // Selected Node Details Card
     Card(
         modifier = Modifier
@@ -122,7 +118,6 @@ fun NodeDetailsCard(node: Node){
                 color = Color.Black
             )
 
-            // TODO C: Couleur
             Surface(
                 color = ColorHelper.connectionStatusColor(node.connection.status),
                 shape = RoundedCornerShape(16.dp)
@@ -157,7 +152,6 @@ fun NodeDetailsCard(node: Node){
     }
 }
 
-// TODO C: A vérifier
 @Composable
 fun DetailRow(icon: ImageVector, value: String) {
     Row(
@@ -171,7 +165,6 @@ fun DetailRow(icon: ImageVector, value: String) {
             modifier = Modifier.size(32.dp),
             tint = Color.Black
         )
-//        Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = value,
             style = MaterialTheme.typography.headlineSmall,

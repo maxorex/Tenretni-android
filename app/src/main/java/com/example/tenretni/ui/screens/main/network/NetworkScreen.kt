@@ -30,8 +30,6 @@ import com.example.tenretni.R
 import com.example.tenretni.ui.components.NodeCard
 import com.example.tenretni.ui.components.NodeDetailsCard
 
-// TODO C: Les données sur l’état global du réseau doivent être mises à jour automatique à chaque 2 minutes
-// TODO C: Changer pour ajouter la bd
 @Composable
 fun NetworkScreen(
     viewModel: NetworkViewModel = viewModel()
@@ -54,7 +52,6 @@ fun NetworkScreen(
                 .padding(bottom = 16.dp)
         )
 
-        // TODO C: vérifier pour bon format
         // Reboot and Update Info
         Text(
             text = stringResource(R.string.next_reboot_at, uiState.network?.nextReboot ?: stringResource(R.string.loading)),
@@ -69,7 +66,6 @@ fun NetworkScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // TODO C: rendre mieu je crois
         // Node List (Horizontal)
         LazyRow(
             modifier = Modifier.fillMaxWidth(),

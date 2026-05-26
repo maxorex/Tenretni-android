@@ -41,8 +41,6 @@ import com.example.tenretni.ui.screens.main.ticketsList.SearchBar
 import com.example.tenretni.ui.screens.main.ticketsList.TicketsListAction
 import com.example.tenretni.ui.screens.main.ticketsList.TicketsListContent
 
-// TODO C: En tant qu’utilisateur, je souhaite procéder à la mise à jour de la borne
-// TODO C: En tant qu’utilisateur, je souhaite planifier un redémarrage de la borne
 @Composable
 fun GatewaysListScreen(
     viewModel: GatewaysListViewModel = viewModel(),
