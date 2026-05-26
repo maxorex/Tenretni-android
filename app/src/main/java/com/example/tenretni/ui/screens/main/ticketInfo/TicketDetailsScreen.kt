@@ -1,5 +1,6 @@
 package com.example.tenretni.ui.screens.main.ticketInfo
 
+import android.content.res.Configuration
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.fitInside
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -87,6 +88,7 @@ fun TicketDetailsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val orientation = LocalConfiguration.current.orientation
 
     LaunchedEffect(Unit) {
         onUpdateTopBar(
@@ -153,12 +155,57 @@ fun TicketDetailsScreen(
                     )
                 )
             }
+
             QRResult.QRUserCanceled -> {}
         }
     }
 
+    if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+        PortraitContent(
+            currentTicket = currentTicket,
+            uiState = uiState,
+            toMapScreen = toMapScreen,
+            onGatewayClick = onGatewayClick,
+            onAction = viewModel::onAction,
+            onInstallClick = {
+                scanQrCodeLauncher.launch(
+                    ScannerConfig.build {
+                        setBarcodeFormats(listOf(BarcodeFormat.FORMAT_ALL_FORMATS))
+                        setOverlayStringRes(R.string.scan_the_id)
+                        setShowCloseButton(true)
+                    }
+                )
+            }
+        )
+    } else {
+        LandscapeContent(
+            currentTicket = currentTicket,
+            uiState = uiState,
+            toMapScreen = toMapScreen,
+            onGatewayClick = onGatewayClick,
+            onAction = viewModel::onAction,
+            onInstallClick = {
+                scanQrCodeLauncher.launch(
+                    ScannerConfig.build {
+                        setBarcodeFormats(listOf(BarcodeFormat.FORMAT_ALL_FORMATS))
+                        setOverlayStringRes(R.string.scan_the_id)
+                        setShowCloseButton(true)
+                    }
+                )
+            }
+        )
+    }
+}
 
-
+@Composable
+fun PortraitContent(
+    currentTicket: Ticket,
+    uiState: TicketDetailsUiState,
+    toMapScreen: (LatLng) -> Unit,
+    onGatewayClick: (Gateway) -> Unit,
+    onAction: (TicketDetailsAction) -> Unit,
+    onInstallClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -192,55 +239,121 @@ fun TicketDetailsScreen(
                 .weight(1f)
                 .fillMaxWidth()
         ) {
-            when (val customerGateways = uiState.customerGateways) {
-                is AsyncResult.Error -> ErrorMessage(customerGateways.messageResId)
-                AsyncResult.Loading -> LoadingAnimation()
-                is AsyncResult.Success -> {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-
-                        items(customerGateways.data) { gateway ->
-                            GatewayListCard(
-                                gateway = gateway,
-                                onClick = {
-                                    onGatewayClick(gateway)
-                                }
-                            )
-                        }
-                    }
-                }
-            }
+            GatewaysList(uiState, onGatewayClick)
         }
 
         // Action Buttons
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            ActionButton(text = stringResource(R.string.install), onClick = {
-                scanQrCodeLauncher.launch(
-                    ScannerConfig.build {
-                        setBarcodeFormats(listOf(BarcodeFormat.FORMAT_ALL_FORMATS))
-                        setOverlayStringRes(R.string.scan_the_id)
-                        setShowCloseButton(true)
-                    }
-                )
+        ActionButtonsRow(currentTicket, onAction, onInstallClick)
+    }
+}
 
-            })
-            if (currentTicket.status == "Open") {
-                ActionButton(text = stringResource(R.string.solve), onClick = {
-                    viewModel.onAction(TicketDetailsAction.Update("solve", currentTicket.href))
+@Composable
+fun LandscapeContent(
+    currentTicket: Ticket,
+    uiState: TicketDetailsUiState,
+    toMapScreen: (LatLng) -> Unit,
+    onGatewayClick: (Gateway) -> Unit,
+    onAction: (TicketDetailsAction) -> Unit,
+    onInstallClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF1F5F9))
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            TicketCard(currentTicket)
+
+            // Customer Info Section
+            val customerResult = uiState.customerResult
+            if (customerResult is AsyncResult.Success) {
+                CustomerCard(customer = customerResult.data, onLocationClick = {
+                    customerResult.data.coord?.let {
+                        toMapScreen(LatLng(it.latitude.toDouble(), it.longitude.toDouble()))
+                    }
                 })
             } else {
-                ActionButton(text = stringResource(R.string.open), onClick = {
-                    viewModel.onAction(TicketDetailsAction.Update("open", currentTicket.href))
+                CustomerCard(customer = currentTicket.customer, onLocationClick = {
+                    currentTicket.customer.coord?.let {
+                        toMapScreen(LatLng(it.latitude.toDouble(), it.longitude.toDouble()))
+                    }
                 })
             }
+
+            ActionButtonsRow(currentTicket, onAction, onInstallClick)
+        }
+
+        Column(
+            modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "Gateways",
+                style = MaterialTheme.typography.displaySmall,
+                fontWeight = FontWeight.Normal
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                GatewaysList(uiState, onGatewayClick)
+            }
+        }
+    }
+}
+
+@Composable
+fun GatewaysList(uiState: TicketDetailsUiState, onGatewayClick: (Gateway) -> Unit) {
+    when (val customerGateways = uiState.customerGateways) {
+        is AsyncResult.Error -> ErrorMessage(customerGateways.messageResId)
+        AsyncResult.Loading -> LoadingAnimation()
+        is AsyncResult.Success -> {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                items(customerGateways.data) { gateway ->
+                    GatewayListCard(
+                        gateway = gateway,
+                        onClick = {
+                            onGatewayClick(gateway)
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ActionButtonsRow(
+    currentTicket: Ticket,
+    onAction: (TicketDetailsAction) -> Unit,
+    onInstallClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        ActionButton(text = stringResource(R.string.install), onClick = onInstallClick)
+        if (currentTicket.status == "Open") {
+            ActionButton(text = stringResource(R.string.solve), onClick = {
+                onAction(TicketDetailsAction.Update("solve", currentTicket.href))
+            })
+        } else {
+            ActionButton(text = stringResource(R.string.open), onClick = {
+                onAction(TicketDetailsAction.Update("open", currentTicket.href))
+            })
         }
     }
 }
@@ -265,52 +378,3 @@ fun ActionButton(text: String, onClick: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun TicketDetailsScreenPreview() {
-    val dummyCustomer = Customer(
-        firstName = "Risa",
-        lastName = "Sloane",
-        email = "rsloanehr@paypal.com",
-        address = "275 Beilfuss Terrace",
-        city = "Campo Formoso",
-        country = "br",
-        gateways = listOf(
-            Gateway(
-                href = "",
-                serialNumber = "123",
-                revision = "1",
-                pin = "1111",
-                hash = "db6ac1f64ad53d3d",
-                customer = Customer(),
-                connection = Connection(
-                    status = "Online",
-                    ping = 16f,
-                    download = 22.569f,
-                    upload = 3.190f
-                ),
-                config = com.example.tenretni.models.Config()
-            ),
-            Gateway(
-                href = "",
-                serialNumber = "456",
-                revision = "1",
-                pin = "2222",
-                hash = "a06c83449a4cebdd",
-                customer = Customer(),
-                connection = Connection(status = "Offline"),
-                config = com.example.tenretni.models.Config()
-            )
-        )
-    )
-    val dummyTicket = Ticket(
-        ticketNumber = "9bcbdbf",
-        createdDate = "2026-04-25 00:07:00",
-        priority = "Critical",
-        status = "Open",
-        customer = dummyCustomer
-    )
-    MaterialTheme {
-        TicketDetailsScreen(ticket = dummyTicket, toMapScreen = {}, onGatewayClick = {})
-    }
-}

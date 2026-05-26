@@ -24,9 +24,7 @@ object Constants {
     }
 
     object LoadingTimer{
-        // TODO: Dois être a 10000
-//        const val LOADING_TIMER = 10000L
-        const val LOADING_TIMER = 1000L
+        const val LOADING_TIMER = 10000L
         const val LOADING_INTERVAL = 1000L
     }
 
