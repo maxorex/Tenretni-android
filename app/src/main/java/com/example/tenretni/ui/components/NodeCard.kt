@@ -28,9 +28,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tenretni.R
 import com.example.tenretni.core.helpers.ColorHelper
 import com.example.tenretni.models.Node
 import com.example.tenretni.ui.theme.CardColor
@@ -79,7 +81,11 @@ fun NodeCard(
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
-                    text = node.connection.status,
+                    text = when(node.connection.status) {
+                        "Online" -> stringResource(R.string.status_online)
+                        "Offline" -> stringResource(R.string.status_offline)
+                        else -> node.connection.status
+                    },
                     color = Color.White,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                     fontSize = 12.sp,
@@ -122,7 +128,11 @@ fun NodeDetailsCard(node: Node){
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Text(
-                    text = node.connection.status,
+                    text = when(node.connection.status) {
+                        "Online" -> stringResource(R.string.status_online)
+                        "Offline" -> stringResource(R.string.status_offline)
+                        else -> node.connection.status
+                    },
                     color = Color.White,
                     modifier = Modifier.padding(horizontal = 48.dp, vertical = 6.dp),
                     fontWeight = FontWeight.Bold,
