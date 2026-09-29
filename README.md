@@ -1,3 +1,5 @@
+Travail pratique synthèse réalisé en Kotlin dans le cadre du cours de développement d'applications mobiles.
+
 Tenretni est une application mobile Android (Kotlin) centralisant la gestion des demandes d'installation de bornes à travers le monde. Entièrement bilingue (français et anglais), l'application permet aux clients de créer des tickets, de scanner des QR codes pour associer directement les équipements, et de géolocaliser les clients sur une carte interactive grâce à l'API Google Maps.
 
 Matias Godbout,
